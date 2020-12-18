@@ -2,7 +2,7 @@
   <div class="flex items-center justify-center flex-wrap bg-grey-100 p-6">
     <h1 class="font-sans text-lg antialiased font-light mb-6">5 Scorers</h1>
 
-    <div class="form-wrapper container">
+    <div class="form-wrapper container relative bg-gradient-to-br from-blue-500 to-green-600 shadow-lg bg-white rounded-lg">
       <form class="form-signin" method="POST">
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">Email</span>
