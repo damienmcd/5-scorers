@@ -10,12 +10,16 @@ module.exports = {
       lg: '976px',
       xl: '1440px'
     },
+    container: {
+      center: true,
+    },
     colors: {
-      gray: colors.coolGray,
+      grey: colors.trueGray,
       blue: colors.lightBlue,
-      red: colors.rose,
-      pink: colors.fuchsia,
-      teal: colors.teal
+      green: colors.teal,
+      red: colors.red,
+      orange: colors.orange,
+      yellow: colors.amber
     },
     fontFamily: {
       sans: ['Graphik', 'sans-serif'],
