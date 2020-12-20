@@ -10,10 +10,21 @@ module.exports = {
       lg: '976px',
       xl: '1440px'
     },
+    minHeight: {
+      0: '0',
+      '1/4': '25%',
+      '1/2': '50%',
+      '3/4': '75%',
+      full: '100%',
+      screen: '100vh',
+      'fill-d': 'calc(100vh - 80px)',
+      'fill-m': 'calc(100vh - 80px)'
+    },
     container: {
       center: true,
     },
     colors: {
+      white: colors.white,
       grey: colors.trueGray,
       blue: colors.lightBlue,
       green: colors.teal,
