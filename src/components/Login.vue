@@ -15,7 +15,7 @@
               type="text"
               name="email"
               v-model="form.email"
-              class="flex-grow-1 flex-shrink-0 w-full px-4 py-2 rounded-sm border-solid border-2 border-opacity-100 border-grey-200 bg-grey-100 focus:bg-white focus:ring-green-500"
+              class="flex-grow-1 flex-shrink-0 w-full px-4 py-2 rounded-sm border-solid border-2 border-opacity-100 border-grey-200 bg-grey-100 focus:bg-white focus:ring-offset-0 focus:ring-4 focus:ring-green-500 focus:ring-opacity-50"
               placeholder="Email Address"
               required
               autofocus
@@ -28,7 +28,7 @@
               type="password"
               name="password"
               v-model="form.password"
-              class="flex-grow-1 flex-shrink-0 w-full px-4 py-2 rounded-sm border-solid border-2 border-opacity-100 border-grey-200 bg-grey-100 focus:bg-white focus:ring-green-500"
+              class="flex-grow-1 flex-shrink-0 w-full px-4 py-2 rounded-sm border-solid border-2 border-opacity-100 border-grey-200 bg-grey-100 focus:bg-white focus:ring-offset-0 focus:ring-4 focus:ring-green-500 focus:ring-opacity-50"
               placeholder="Password"
               required
             >
