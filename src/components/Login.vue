@@ -35,6 +35,9 @@
         </div>
         <button class="btn py-2 px-8 rounded-sm bg-green-500 text-white transition-all hover:bg-green-700" type="submit">Login</button>
       </form>
+      <p>{{ response }}</p>
+      <p>{{ $store.getters.user }}</p>
+      <p>{{ errors }}</p>
     </div>
   </div>
 </template>
@@ -42,26 +45,52 @@
 <script lang="js">
 export default {
   name: 'Login',
+
   props: [],
+
   data () {
     return {
-      valid: false,
       form: {
         email: '',
         password: ''
       },
-      error: null
+      response: '',
+      errors: []
     }
   },
+
   computed: {
   },
+
   mounted () {
   },
+
   methods: {
     loginUser () {
-      console.log('Login')
-      console.log('email: ' + this.form.email)
-      console.log('password: ' + this.form.password)
+      const loginFormData = new FormData()
+      loginFormData.append('email', this.form.email)
+      loginFormData.append('password', this.form.password)
+
+      const options = {
+        method: 'POST',
+        headers: { 'content-type': 'application/form-data' },
+        data: loginFormData,
+        url: 'http://5scorers/login.php'
+      }
+
+      this.axios(options)
+        .then(response => {
+          if (response.data.logged_in === true) {
+            this.$store.dispatch('setUser', response.data)
+          } else {
+            this.response = response.data.message
+            this.errors.push(response.data.message)
+          }
+        })
+        .catch(error => {
+          this.errors.push(error)
+          console.log(this.errors)
+        })
     }
   }
 }
