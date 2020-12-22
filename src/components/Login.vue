@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center flex-wrap">
+  <div class="max-w-screen-sm flex items-center justify-center flex-wrap">
     <h1 class="font-sans text-lg antialiased font-light mb-6">5 Scorers</h1>
 
     <div class="form-wrapper container flex flex-row items-start justify-center flex-wrap p-6 shadow-lg rounded-lg bg-white">
@@ -35,9 +35,20 @@
         </div>
         <button class="btn py-2 px-8 rounded-sm bg-green-500 text-white transition-all hover:bg-green-700" type="submit">Login</button>
       </form>
-      <p>{{ response }}</p>
-      <p>{{ $store.getters.user }}</p>
-      <p>{{ errors }}</p>
+
+      <div
+        v-for="(subWidget, index) in subWidgets"
+        :contentsIndex="contentsIndex"
+        :key="subWidget.widget_name + index"
+        :is="subWidget['widget_name']"
+        :widgetSettings="subWidget.settings"
+        :widgetName="subWidget['widget_name']"
+        :hasWrapper="true"
+        :ref="`widget_${subWidget.widget_name}`"
+        @update-on-adtext="updateAdText"
+        @validate-channels="channelValidator"
+      ></div>
+      </p>
     </div>
   </div>
 </template>
@@ -80,15 +91,19 @@ export default {
 
       this.axios(options)
         .then(response => {
-          if (response.data.logged_in === true) {
+          if (response.data.loggedIn === true) {
+            console.log('response.data')
+            console.log(response.data)
             this.$store.dispatch('setUser', response.data)
+            this.$router.push('/dashboard')
           } else {
             this.response = response.data.message
             this.errors.push(response.data.message)
           }
         })
         .catch(error => {
-          this.errors.push(error)
+          const errorOutput = { id: this.errors.length + 1, message: error }
+          this.errors.push(errorOutput)
           console.log(this.errors)
         })
     }

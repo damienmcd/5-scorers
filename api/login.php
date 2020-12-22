@@ -26,7 +26,7 @@ if (isset($_POST['email']) and isset($_POST['password'])) {
         $response['lastname'] = $user_lastname;
         $response['email'] = $user_email;
         $response['role'] = $user_role;
-        $response['logged_in'] = true;
+        $response['loggedIn'] = true;
     } else {
         $response['status'] = 'error';
         $response['message'] = 'Invalid login';

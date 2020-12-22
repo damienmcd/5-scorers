@@ -6,12 +6,13 @@
 
 <script>
 // @ is an alias to /src
-import Login from '@/components/Login.vue'
-
 export default {
   name: 'Home',
-  components: {
-    Login
+  components: { Login: () => import(/* webpackChunkName: "Login" */ '@/components/Login.vue') },
+  beforeMount () {
+    if (this.$store.getters.user.loggedIn) {
+      this.$router.push('/dashboard')
+    }
   }
 }
 </script>
