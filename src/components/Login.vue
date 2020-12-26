@@ -86,7 +86,7 @@ export default {
 
       this.axios(options)
         .then(response => {
-          if (response.data.loggedIn === true) {
+          if (response.data.status === 'success') {
             console.log('response.data')
             console.log(response.data)
             this.$store.dispatch('setUser', response.data)

@@ -21,6 +21,7 @@ if (isset($_POST['email']) and isset($_POST['password'])) {
     $response = array();
 
     if ($count == 1) {
+        $response['status'] = 'success';
         $response['id'] = $user_id;
         $response['firstname'] = $user_firstname;
         $response['lastname'] = $user_lastname;
