@@ -28,8 +28,16 @@ if (isset($_POST['email']) and isset($_POST['password'])) {
         $response['role'] = $user_role;
         $response['loggedIn'] = true;
     } else {
-        $response['status'] = 'error';
-        $response['message'] = 'Invalid login';
+        $email_query = "SELECT user_email FROM `tbl_users` WHERE user_email='$email' and user_deleted = 0";
+        $email_results = mysqli_query($conn, $email_query) or die(mysqli_error($conn));
+        $email_count = mysqli_num_rows($email_results);
+        if ($email_count == 1) {
+            $response['status'] = 'error';
+            $response['message'] = 'Incorrect password';
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Email not found';
+        }
     }
 
     echo json_encode($response);

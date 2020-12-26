@@ -37,18 +37,12 @@
       </form>
 
       <div
-        v-for="(subWidget, index) in subWidgets"
-        :contentsIndex="contentsIndex"
-        :key="subWidget.widget_name + index"
-        :is="subWidget['widget_name']"
-        :widgetSettings="subWidget.settings"
-        :widgetName="subWidget['widget_name']"
-        :hasWrapper="true"
-        :ref="`widget_${subWidget.widget_name}`"
-        @update-on-adtext="updateAdText"
-        @validate-channels="channelValidator"
-      ></div>
-      </p>
+        class="alert error"
+        v-for="(error, index) in errors"
+        :key="index"
+      >
+        {{ error }}
+      </div>
     </div>
   </div>
 </template>
@@ -78,6 +72,7 @@ export default {
 
   methods: {
     loginUser () {
+      this.errors = []
       const loginFormData = new FormData()
       loginFormData.append('email', this.form.email)
       loginFormData.append('password', this.form.password)
