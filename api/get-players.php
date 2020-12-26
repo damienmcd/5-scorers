@@ -33,13 +33,11 @@ if ($status_code === 200) {
 
     foreach ($data['elements'] as $key => $item) {
         $player = array();
-        $player['id'] = $item['id'];
-        $player['first_name'] = $item['first_name'];
-        $player['second_name'] = $item['second_name'];
-        $player['web_name'] = $item['web_name'];
-        $player['team'] = $item['team'];
-        $player['team_name'] = $teams[$player['team'] - 1]['name'];
-        $player['display_name'] = $player['web_name'] . ' - ' . $player['team_name'];
+        $player['value'] = $item['id'];
+        $web_name = $item['web_name'];
+        $team = $item['team'];
+        $team_name = $teams[$team - 1]['name'];
+        $player['text'] = $web_name . ' - ' . $team_name;
 
         $players[] = $player;
     }

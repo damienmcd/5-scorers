@@ -20,6 +20,10 @@ export default new Vuex.Store({
   getters: {
     user: state => {
       return state.user
+    },
+
+    players: state => {
+      return state.players
     }
   },
   actions: {

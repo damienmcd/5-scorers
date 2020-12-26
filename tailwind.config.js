@@ -21,7 +21,7 @@ module.exports = {
       'fill-m': 'calc(100vh - 80px)'
     },
     container: {
-      center: true,
+      center: true
     },
     colors: {
       white: colors.white,
