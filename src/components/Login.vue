@@ -37,7 +37,7 @@
       </form>
 
       <div
-        class="alert error"
+        class="w-full flex items-center justify-center flex-nowrap my-4 py-2 px-4 rounded-sm bg-red-500 text-white"
         v-for="(error, index) in errors"
         :key="index"
       >
