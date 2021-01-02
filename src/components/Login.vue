@@ -2,7 +2,7 @@
   <div class="max-w-screen-sm flex items-center justify-center flex-wrap">
     <h1 class="font-sans text-lg antialiased font-light mb-6">5 Scorers</h1>
 
-    <div class="form-wrapper container flex flex-row items-start justify-center flex-wrap p-6 shadow-lg rounded-lg bg-white">
+    <div class="form-wrapper container flex flex-row items-start justify-center flex-wrap mb-8 p-6 shadow-lg rounded-lg bg-white">
       <form
         class="form-signin container flex flex-row items-start justify-center flex-wrap"
         action="#"
@@ -81,7 +81,7 @@ export default {
         method: 'POST',
         headers: { 'content-type': 'application/form-data' },
         data: loginFormData,
-        url: 'http://5scorers/login.php'
+        url: process.env.VUE_APP_BASE_URL + '/api/login.php'
       }
 
       this.axios(options)

@@ -50,11 +50,11 @@
             {{ userResponse }}
           </div>
 
-          <div
+          <!-- <div
             class="w-full flex items-center justify-center flex-nowrap my-4 py-2 px-4 rounded-sm bg-grey-500 text-white"
           >
             {{ scorers }}
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -107,20 +107,20 @@ export default {
           method: 'POST',
           headers: { 'content-type': 'application/form-data' },
           data: pickScorersFormData,
-          url: 'http://5scorers/pick-scorers.php'
+          url: process.env.VUE_APP_BASE_URL + '/api/pick-scorers.php'
         }
 
         this.axios(options)
           .then(response => {
             console.log({ response })
-            if (response.data.status === 'success') {
+            if (response.data.status === 'success' && response.data.message.length) {
               console.log('response.data')
               console.log(response.data)
-              this.userResponse = response.data
-            // this.$store.dispatch('setUser', response.data)
-            // } else {
-            //   this.response = response.data.message
-            //   this.errors.push(response.data.message)
+              this.userResponse = response.data.message
+              this.$store.dispatch('setUser', response.data)
+            } else {
+              this.response = response.data.message
+              this.errors.push(response.data.message)
             }
           })
           .catch(error => {

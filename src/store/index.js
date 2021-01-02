@@ -38,7 +38,7 @@ export default new Vuex.Store({
     initPlayers ({ commit }) {
       let players = {}
 
-      axios.get('http://5scorers/get-players.php')
+      axios.get(process.env.VUE_APP_BASE_URL + '/api/get-players.php')
         .then(response => {
           console.log('response')
           console.log(response)

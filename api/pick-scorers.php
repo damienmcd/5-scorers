@@ -18,14 +18,14 @@ if (isset($_POST['game_id']) and isset($_POST['user_id']) and isset($_POST['scor
     $count = mysqli_num_rows($results);
 
     $response = array();
+    $response['server_name'] = $_SERVER['SERVER_NAME'];
+    $response['hostname'] = $hostname;
 
     if ($count == 1) {
         // Edit picks
         $update_query = "UPDATE `tbl_player_picks` SET picks_player_1 = '$scorer1', picks_player_2 = '$scorer2', picks_player_3 = '$scorer3', picks_player_4 = '$scorer4', picks_player_5 = '$scorer5' WHERE picks_user_id='$user_id' and picks_game_id='$game_id'";
 
         $update_results = mysqli_query($conn, $update_query) or die(mysqli_error($conn));
-
-        var_dump($update_results);
 
         if ($update_results) {
             $response['status'] = 'success';
@@ -39,8 +39,6 @@ if (isset($_POST['game_id']) and isset($_POST['user_id']) and isset($_POST['scor
         $insert_query = "INSERT INTO `tbl_player_picks` (picks_game_id, picks_user_id, picks_player_1, picks_player_2, picks_player_3, picks_player_4, picks_player_5) VALUES ('$game_id', '$user_id', '$scorer1', '$scorer2', '$scorer3', '$scorer4', '$scorer5')";
 
         $insert_results = mysqli_query($conn, $insert_query) or die(mysqli_error($conn));
-
-        var_dump($insert_results);
 
         if ($insert_results) {
             $response['status'] = 'success';

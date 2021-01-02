@@ -1,4 +1,6 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+
 require 'includes/db-connect.php';
 
 if (isset($_POST['email']) and isset($_POST['password'])) {
