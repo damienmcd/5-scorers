@@ -79,7 +79,18 @@ export default {
     }
   },
 
-  mounted () {},
+  mounted () {
+    console.log('this.$store.getters.currentPicks.id')
+    console.log(this.$store.getters.currentPicks.id)
+    if (this.$store.getters.currentPicks.id !== '') {
+      console.log('Setting existing picks')
+      this.scorers.scorer1 = this.$store.getters.currentPicks.player_1
+      this.scorers.scorer2 = this.$store.getters.currentPicks.player_2
+      this.scorers.scorer3 = this.$store.getters.currentPicks.player_3
+      this.scorers.scorer4 = this.$store.getters.currentPicks.player_4
+      this.scorers.scorer5 = this.$store.getters.currentPicks.player_5
+    }
+  },
 
   methods: {
     selectPlayers () {
@@ -117,7 +128,6 @@ export default {
               console.log('response.data')
               console.log(response.data)
               this.userResponse = response.data.message
-              this.$store.dispatch('setUser', response.data)
             } else {
               this.response = response.data.message
               this.errors.push(response.data.message)

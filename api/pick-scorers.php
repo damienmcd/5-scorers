@@ -18,8 +18,6 @@ if (isset($_POST['game_id']) and isset($_POST['user_id']) and isset($_POST['scor
     $count = mysqli_num_rows($results);
 
     $response = array();
-    $response['server_name'] = $_SERVER['SERVER_NAME'];
-    $response['hostname'] = $hostname;
 
     if ($count == 1) {
         // Edit picks

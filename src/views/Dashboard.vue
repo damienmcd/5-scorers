@@ -11,8 +11,9 @@ export default {
     return {}
   },
 
-  mounted () {
-    this.$store.dispatch('initPlayers')
+  async beforeMount () {
+    await this.$store.dispatch('initPlayers')
+    await this.$store.dispatch('getCurrentGame')
   },
 
   methods: {}

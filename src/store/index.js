@@ -15,8 +15,20 @@ export default new Vuex.Store({
       role: null
     },
 
-    players: {}
+    players: {},
+
+    game: {},
+
+    currentPicks: {
+      id: '',
+      player_1: '',
+      player_2: '',
+      player_3: '',
+      player_4: '',
+      player_5: ''
+    }
   },
+
   getters: {
     user: state => {
       return state.user
@@ -24,8 +36,17 @@ export default new Vuex.Store({
 
     players: state => {
       return state.players
+    },
+
+    game: state => {
+      return state.game
+    },
+
+    currentPicks: state => {
+      return state.currentPicks
     }
   },
+
   actions: {
     setUser ({ commit }, userData) {
       commit('setUser', userData)
@@ -55,8 +76,69 @@ export default new Vuex.Store({
           this.errors.push(errorOutput)
           console.log(this.errors)
         })
+    },
+
+    getCurrentGame ({ commit }) {
+      let game = {}
+
+      axios.get(process.env.VUE_APP_BASE_URL + '/api/get-current-game.php')
+        .then(response => {
+          console.log('response')
+          console.log(response)
+          if (response.status === 200) {
+            game = response.data.game
+            commit('initGame', game)
+          } else {
+            this.response = response.error
+            this.errors.push(response.error)
+          }
+        })
+        .catch(error => {
+          const errorOutput = { id: this.errors.length + 1, message: error }
+          this.errors.push(errorOutput)
+          console.log(this.errors)
+        })
+    },
+
+    getCurrentGamePicks ({ commit }) {
+      console.log('Getting existing picks')
+
+      const existingPicksFormData = new FormData()
+
+      existingPicksFormData.append('user_id', this.state.user.id)
+      existingPicksFormData.append('game_id', this.state.game.id)
+
+      console.log({ existingPicksFormData })
+      console.log('this.state.user.id: ' + this.state.user.id)
+      console.log('this.state.user.id: ' + this.state.game.id)
+
+      const options = {
+        method: 'POST',
+        headers: { 'content-type': 'application/form-data' },
+        data: existingPicksFormData,
+        url: process.env.VUE_APP_BASE_URL + '/api/get-current-game-picks.php'
+      }
+
+      axios(options)
+        .then(response => {
+          console.log('response')
+          console.log(response)
+          if (response.data.status === 'success') {
+            const currentGamePicks = response.data.picks
+            commit('setCurrentGamePicks', currentGamePicks)
+          } else {
+            this.response = response.error
+            this.errors.push(response.error)
+          }
+        })
+        .catch(error => {
+          const errorOutput = { id: this.errors.length + 1, message: error }
+          this.errors.push(errorOutput)
+          console.log(this.errors)
+        })
     }
   },
+
   mutations: {
     setUser (state, userData) {
       state.user = userData
@@ -88,8 +170,20 @@ export default new Vuex.Store({
 
     initPlayers (state, players) {
       state.players = players
+    },
+
+    initGame (state, game) {
+      console.log('initGame')
+      console.log({ game })
+      state.game = game
+      this.dispatch('getCurrentGamePicks')
+    },
+
+    setCurrentGamePicks (state, picks) {
+      state.currentPicks = picks
     }
   },
+
   modules: {
   }
 })
