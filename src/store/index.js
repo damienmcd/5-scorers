@@ -26,7 +26,9 @@ export default new Vuex.Store({
       player_3: '',
       player_4: '',
       player_5: ''
-    }
+    },
+
+    gameDataLoaded: false
   },
 
   getters: {
@@ -44,6 +46,10 @@ export default new Vuex.Store({
 
     currentPicks: state => {
       return state.currentPicks
+    },
+
+    gameDataLoaded: state => {
+      return state.gameDataLoaded
     }
   },
 
@@ -54,6 +60,10 @@ export default new Vuex.Store({
 
     logOut ({ commit }) {
       commit('logOut')
+    },
+
+    setGameDataLoaded ({ commit }) {
+      commit('setGameDataLoaded')
     },
 
     initPlayers ({ commit }) {
@@ -126,6 +136,7 @@ export default new Vuex.Store({
           if (response.data.status === 'success') {
             const currentGamePicks = response.data.picks
             commit('setCurrentGamePicks', currentGamePicks)
+            commit('setGameDataLoaded')
           } else {
             this.response = response.error
             this.errors.push(response.error)
@@ -181,6 +192,10 @@ export default new Vuex.Store({
 
     setCurrentGamePicks (state, picks) {
       state.currentPicks = picks
+    },
+
+    setGameDataLoaded (state) {
+      state.gameDataLoaded = true
     }
   },
 
