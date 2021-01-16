@@ -87,8 +87,6 @@ export default {
       this.axios(options)
         .then(response => {
           if (response.data.status === 'success') {
-            console.log('response.data')
-            console.log(response.data)
             this.$store.dispatch('setUser', response.data)
             this.$router.push('/dashboard')
           } else {
@@ -99,7 +97,6 @@ export default {
         .catch(error => {
           const errorOutput = { id: this.errors.length + 1, message: error }
           this.errors.push(errorOutput)
-          console.log(this.errors)
         })
     }
   }

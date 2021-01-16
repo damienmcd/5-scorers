@@ -2,9 +2,8 @@
   <div class="home container flex flex-row items-start justify-center flex-wrap min-h-fill-d px-6 pt-12">
     <div class="max-w-screen-sm flex items-center justify-center flex-wrap">
       <h1 class="font-sans text-lg antialiased font-light mb-6">Pick your 5 scorers</h1>
-      <p>gameDataLoaded: {{ gameDataLoaded }}</p>
 
-      <div v-if="gameDataLoaded" class="form-wrapper container flex flex-row items-start justify-center flex-wrap mb-8 p-6 shadow-lg rounded-lg bg-white">
+      <div class="form-wrapper container flex flex-row items-start justify-center flex-wrap mb-8 p-6 shadow-lg rounded-lg bg-white">
         <div
           class="form-signin container flex flex-row items-start justify-center flex-wrap"
         >
@@ -15,9 +14,7 @@
           >
             <div class="flex flex-wrap flex-grow-1 flex-shrink-0 w-full mb-2">
                 <label for="player-1" class="flex-grow-1 flex-shrink-0 w-full py-2 text-left">Scorer 1</label>
-                <!-- <t-rich-select id="player-1" name="player-1" :options=$store.getters.players v-model="scorers.scorer1"></t-rich-select> -->
-                <t-rich-select id="player-1" name="player-1" :options=$store.getters.players valueAttribute="currentPicks.player_1"></t-rich-select>
-                <p>{{ currentPicks.player_1 }}</p>
+                <t-rich-select id="player-1" name="player-1" :options=$store.getters.players v-model="scorers.scorer1"></t-rich-select>
             </div>
             <div class="flex flex-wrap flex-grow-1 flex-shrink-0 w-full mb-2">
                 <label for="player-2" class="flex-grow-1 flex-shrink-0 w-full py-2 text-left">Scorer 2</label>
@@ -52,18 +49,6 @@
           >
             {{ userResponse }}
           </div>
-
-          <div
-            class="w-full flex items-center justify-center flex-nowrap my-4 py-2 px-4 rounded-sm bg-grey-500 text-white"
-          >
-            {{ scorers }}
-          </div>
-
-          <div
-            class="w-full flex items-center justify-center flex-nowrap my-4 py-2 px-4 rounded-sm bg-grey-500 text-white"
-          >
-            {{ currentPicks }}
-          </div>
         </div>
       </div>
     </div>
@@ -86,20 +71,18 @@ export default {
         scorer5: null
       },
       errors: [],
-      userResponse: ''
+      userResponse: '',
+      testScorer: 514
     }
   },
 
-  mounted () {
-    console.log('this.currentPicks.id')
-    console.log(this.currentPicks.id)
+  beforeMount () {
     if (this.currentPicks.id !== '') {
-      console.log('Setting existing picks')
-      this.scorers.scorer1 = this.currentPicks.player_1
-      this.scorers.scorer2 = this.currentPicks.player_2
-      this.scorers.scorer3 = this.currentPicks.player_3
-      this.scorers.scorer4 = this.currentPicks.player_4
-      this.scorers.scorer5 = this.currentPicks.player_5
+      this.scorers.scorer1 = parseInt(this.currentPicks.player_1)
+      this.scorers.scorer2 = parseInt(this.currentPicks.player_2)
+      this.scorers.scorer3 = parseInt(this.currentPicks.player_3)
+      this.scorers.scorer4 = parseInt(this.currentPicks.player_4)
+      this.scorers.scorer5 = parseInt(this.currentPicks.player_5)
     }
   },
 
@@ -115,7 +98,7 @@ export default {
       ) {
         this.errors.push('Please choose 5 scorers')
       } else {
-        console.log('Saving scorers')
+        // console.log('Saving scorers')
         const pickScorersFormData = new FormData()
         pickScorersFormData.append('user_id', this.$store.getters.user.id)
         pickScorersFormData.append('game_id', 1)
@@ -134,10 +117,10 @@ export default {
 
         this.axios(options)
           .then(response => {
-            console.log({ response })
+            // console.log({ response })
             if (response.data.status === 'success' && response.data.message.length) {
-              console.log('response.data')
-              console.log(response.data)
+              // console.log('response.data')
+              // console.log(response.data)
               this.userResponse = response.data.message
             } else {
               this.response = response.data.message
@@ -147,15 +130,14 @@ export default {
           .catch(error => {
             const errorOutput = { id: this.errors.length + 1, message: error }
             this.errors.push(errorOutput)
-            console.log(this.errors)
+            // console.log(this.errors)
           })
       }
     }
   },
 
   computed: {
-    ...mapGetters(['currentPicks']),
-    ...mapGetters(['gameDataLoaded'])
+    ...mapGetters(['currentPicks'])
   }
 }
 </script>

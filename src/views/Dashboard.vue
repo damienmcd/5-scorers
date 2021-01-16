@@ -1,22 +1,37 @@
 <template>
-  <PickScorers />
+  <PickScorers v-if="gameReady" />
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Dashboard',
   components: { PickScorers: () => import(/* webpackChunkName: "PickScorers" */ '@/views/PickScorers.vue') },
   props: {},
   data () {
-    return {}
+    return {
+      gameReady: false
+    }
   },
 
   async beforeMount () {
     await this.$store.dispatch('initPlayers')
-    await this.$store.dispatch('getCurrentGame')
   },
 
-  methods: {}
+  mounted () {
+    this.$store.subscribe(mutation => {
+      if (mutation.type === 'setGameReady') {
+        this.gameReady = true
+      }
+    })
+  },
+
+  methods: {},
+
+  computed: {
+    ...mapGetters(['currentPicks'])
+  }
 }
 </script>
 

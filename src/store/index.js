@@ -28,7 +28,7 @@ export default new Vuex.Store({
       player_5: ''
     },
 
-    gameDataLoaded: false
+    gameReady: false
   },
 
   getters: {
@@ -48,8 +48,8 @@ export default new Vuex.Store({
       return state.currentPicks
     },
 
-    gameDataLoaded: state => {
-      return state.gameDataLoaded
+    gameReady: state => {
+      return state.gameReady
     }
   },
 
@@ -62,8 +62,8 @@ export default new Vuex.Store({
       commit('logOut')
     },
 
-    setGameDataLoaded ({ commit }) {
-      commit('setGameDataLoaded')
+    setGameReady ({ commit }) {
+      commit('setGameReady')
     },
 
     initPlayers ({ commit }) {
@@ -71,8 +71,8 @@ export default new Vuex.Store({
 
       axios.get(process.env.VUE_APP_BASE_URL + '/api/get-players.php')
         .then(response => {
-          console.log('response')
-          console.log(response)
+          // console.log('players')
+          // console.log(response)
           if (response.status === 200) {
             players = response.data.players
             commit('initPlayers', players)
@@ -84,7 +84,7 @@ export default new Vuex.Store({
         .catch(error => {
           const errorOutput = { id: this.errors.length + 1, message: error }
           this.errors.push(errorOutput)
-          console.log(this.errors)
+          // console.log(this.errors)
         })
     },
 
@@ -93,8 +93,8 @@ export default new Vuex.Store({
 
       axios.get(process.env.VUE_APP_BASE_URL + '/api/get-current-game.php')
         .then(response => {
-          console.log('response')
-          console.log(response)
+          // console.log('current game')
+          // console.log(response)
           if (response.status === 200) {
             game = response.data.game
             commit('initGame', game)
@@ -106,21 +106,21 @@ export default new Vuex.Store({
         .catch(error => {
           const errorOutput = { id: this.errors.length + 1, message: error }
           this.errors.push(errorOutput)
-          console.log(this.errors)
+          // console.log(this.errors)
         })
     },
 
     getCurrentGamePicks ({ commit }) {
-      console.log('Getting existing picks')
+      // console.log('Getting existing picks')
 
       const existingPicksFormData = new FormData()
 
       existingPicksFormData.append('user_id', this.state.user.id)
       existingPicksFormData.append('game_id', this.state.game.id)
 
-      console.log({ existingPicksFormData })
-      console.log('this.state.user.id: ' + this.state.user.id)
-      console.log('this.state.user.id: ' + this.state.game.id)
+      // console.log({ existingPicksFormData })
+      // console.log('this.state.user.id: ' + this.state.user.id)
+      // console.log('this.state.user.id: ' + this.state.game.id)
 
       const options = {
         method: 'POST',
@@ -131,12 +131,14 @@ export default new Vuex.Store({
 
       axios(options)
         .then(response => {
-          console.log('response')
-          console.log(response)
+          // console.log('current picks')
+          // console.log(response)
           if (response.data.status === 'success') {
             const currentGamePicks = response.data.picks
             commit('setCurrentGamePicks', currentGamePicks)
-            commit('setGameDataLoaded')
+          } else if (response.data.status === 'info' && response.data.message === 'No picks found') {
+            // console.log('No Picks Found')
+            commit('setCurrentGamePicks', this.state.currentPicks)
           } else {
             this.response = response.error
             this.errors.push(response.error)
@@ -145,7 +147,7 @@ export default new Vuex.Store({
         .catch(error => {
           const errorOutput = { id: this.errors.length + 1, message: error }
           this.errors.push(errorOutput)
-          console.log(this.errors)
+          // console.log(this.errors)
         })
     }
   },
@@ -162,7 +164,7 @@ export default new Vuex.Store({
     },
 
     logOut (state) {
-      console.log('logging out: ')
+      // console.log('logging out: ')
       state.user = {
         id: null,
         email: null,
@@ -181,21 +183,23 @@ export default new Vuex.Store({
 
     initPlayers (state, players) {
       state.players = players
+      this.dispatch('getCurrentGame')
     },
 
     initGame (state, game) {
-      console.log('initGame')
-      console.log({ game })
+      // console.log('initGame')
+      // console.log({ game })
       state.game = game
       this.dispatch('getCurrentGamePicks')
     },
 
     setCurrentGamePicks (state, picks) {
       state.currentPicks = picks
+      this.dispatch('setGameReady')
     },
 
-    setGameDataLoaded (state) {
-      state.gameDataLoaded = true
+    setGameReady (state) {
+      state.gameReady = true
     }
   },
 
