@@ -17,6 +17,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/admin',
+    name: 'admin',
+    component: () => import(/* webpackChunkName: "Admin" */ '../views/Admin.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/404',
     alias: '*',
     name: 'notFound',

@@ -9,6 +9,7 @@ import VueTailwind from 'vue-tailwind'
 import './assets/styles/index.css'
 
 import TRichSelect from 'vue-tailwind/dist/t-rich-select'
+import TDatePicker from 'vue-tailwind/dist/t-datepicker'
 
 const VueTailwindSettings = {
   't-rich-select': {
@@ -69,6 +70,32 @@ const VueTailwindSettings = {
           selectButtonClearButton: 'hover:bg-green-200 text-green-500',
           dropdown: 'bg-green-50 border-green-300'
         }
+      }
+    }
+  },
+
+  't-datepicker': {
+    component: TDatePicker,
+    props: {
+      fixedClasses: {
+        navigator: 'w-full relative flex',
+        navigatorViewButton: 'flex items-center',
+        navigatorViewButtonIcon: 'flex-shrink-0 h-5 w-5',
+        navigatorViewButtonBackIcon: 'flex-shrink-0 h-5 w-5',
+        navigatorLabel: 'flex items-center py-1',
+        navigatorPrevButtonIcon: 'h-6 w-6 inline-flex',
+        navigatorNextButtonIcon: 'h-6 w-6 inline-flex',
+
+        inputWrapper: 'relative',
+        viewGroup: 'inline-flex flex-wrap',
+        view: 'w-64',
+        calendarDaysWrapper: 'grid grid-cols-7',
+        calendarHeaderWrapper: 'grid grid-cols-7',
+        monthWrapper: 'grid grid-cols-4',
+        yearWrapper: 'grid grid-cols-4',
+
+        clearButton: 'flex flex-shrink-0 items-center justify-center absolute right-0 top-0 m-2 h-6 w-6',
+        clearButtonIcon: 'fill-current h-3 w-3'
       }
     }
   }
