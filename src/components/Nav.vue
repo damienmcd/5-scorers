@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex items-center justify-center flex-wrap bg-green-500 p-6">
+  <nav class="flex items-center justify-center flex-wrap bg-green-500 bg-gradient-to-r from-green-700 p-6">
     <div class="flex items-center flex-shrink-0 text-white mr-6">
       <svg
         class="fill-current h-8 w-8 mr-2"

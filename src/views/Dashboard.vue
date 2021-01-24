@@ -1,13 +1,15 @@
 <template>
-  <PickScorers v-if="gameReady" />
+  <MainMenu v-if="gameReady" />
+  <!-- <PickScorers v-if="gameReady" /> -->
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'Dashboard',
-  components: { PickScorers: () => import(/* webpackChunkName: "PickScorers" */ '@/views/PickScorers.vue') },
+  components: {
+    MainMenu: () => import(/* webpackChunkName: "MainMenu" */ '@/components/MainMenu.vue')
+    // PickScorers: () => import(/* webpackChunkName: "PickScorers" */ '@/views/PickScorers.vue')
+  },
   props: {},
   data () {
     return {
@@ -27,11 +29,7 @@ export default {
     })
   },
 
-  methods: {},
-
-  computed: {
-    ...mapGetters(['currentPicks'])
-  }
+  methods: {}
 }
 </script>
 

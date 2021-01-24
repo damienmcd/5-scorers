@@ -11,15 +11,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue')
   },
   {
+    path: '/admin',
+    name: 'admin',
+    component: () => import(/* webpackChunkName: "Admin" */ '../views/Admin.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import(/* webpackChunkName: "Dashboard" */ '../views/Dashboard.vue'),
     meta: { requiresAuth: true }
   },
   {
-    path: '/admin',
-    name: 'admin',
-    component: () => import(/* webpackChunkName: "Admin" */ '../views/Admin.vue'),
+    path: '/pick-scorers',
+    name: 'pick-scorers',
+    component: () => import(/* webpackChunkName: "PickScorers" */ '../views/PickScorers.vue'),
     meta: { requiresAuth: true }
   },
   {
