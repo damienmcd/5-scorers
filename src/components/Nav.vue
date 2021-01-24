@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Nav',
 
@@ -62,6 +64,10 @@ export default {
       this.$store.dispatch('logOut')
       this.$router.push('/')
     }
+  },
+
+  computed: {
+    ...mapGetters(['user'])
   }
 }
 </script>

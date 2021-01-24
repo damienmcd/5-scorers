@@ -27,11 +27,11 @@ if (isset($_POST['game_id']) and isset($_POST['user_id'])) {
         $picks = array();
         $response['status'] = 'success';
         $picks['id'] = $game_id;
-        $picks['player_1'] = $picks_player_1;
-        $picks['player_2'] = $picks_player_2;
-        $picks['player_3'] = $picks_player_3;
-        $picks['player_4'] = $picks_player_4;
-        $picks['player_5'] = $picks_player_5;
+        $picks['player_1'] = (int)$picks_player_1;
+        $picks['player_2'] = (int)$picks_player_2;
+        $picks['player_3'] = (int)$picks_player_3;
+        $picks['player_4'] = (int)$picks_player_4;
+        $picks['player_5'] = (int)$picks_player_5;
 
         $response['picks'] = $picks;
     } else {

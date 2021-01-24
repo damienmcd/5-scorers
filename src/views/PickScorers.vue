@@ -78,11 +78,11 @@ export default {
 
   beforeMount () {
     if (this.currentPicks.id !== '') {
-      this.scorers.scorer1 = parseInt(this.currentPicks.player_1)
-      this.scorers.scorer2 = parseInt(this.currentPicks.player_2)
-      this.scorers.scorer3 = parseInt(this.currentPicks.player_3)
-      this.scorers.scorer4 = parseInt(this.currentPicks.player_4)
-      this.scorers.scorer5 = parseInt(this.currentPicks.player_5)
+      this.scorers.scorer1 = this.currentPicks.player_1
+      this.scorers.scorer2 = this.currentPicks.player_2
+      this.scorers.scorer3 = this.currentPicks.player_3
+      this.scorers.scorer4 = this.currentPicks.player_4
+      this.scorers.scorer5 = this.currentPicks.player_5
     }
   },
 
