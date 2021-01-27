@@ -7,11 +7,13 @@
         <div
           class="form-signin container flex flex-row items-start justify-center flex-wrap"
         >
-          <!-- <p>{{ game }}</p> -->
+          <p>{{ game }}</p>
+          <p>{{ currentGame }}</p>
           <form
+            v-if="gameLoaded"
             class="form-signin container flex flex-row items-start justify-center flex-wrap"
             action="#"
-            @submit.prevent="setUpGame"
+            @submit.prevent="saveGame"
           >
             <div class="flex flex-wrap flex-grow-1 flex-shrink-0 w-full mb-2">
                 <label for="week-no" class="flex-grow-1 flex-shrink-0 w-full py-2 text-left">Week No.</label>
@@ -41,6 +43,13 @@
           >
             {{ error }}
           </div>
+
+          <div
+            v-if="userResponse !== ''"
+            class="w-full flex items-center justify-center flex-nowrap my-4 py-2 px-4 rounded-sm bg-green-300 text-white"
+          >
+            {{ userResponse }}
+          </div>
         </div>
       </div>
     </div>
@@ -56,12 +65,16 @@ export default {
   data () {
     return {
       currentGame: {
+        game_id: 0,
         week_no: 0,
         deadline_date: '2021-01-01',
         deadline_time: '15:00',
         jackpot: 0
       },
-      errors: []
+      gameLoaded: false,
+      saveMode: 'update',
+      errors: [],
+      userResponse: ''
     }
   },
 
@@ -69,19 +82,92 @@ export default {
     console.log('Game: ')
     console.log(this.game)
     if (this.game.deadline !== '') {
+      this.currentGame.game_id = parseInt(this.game.id)
       this.currentGame.week_no = parseInt(this.game.week_no)
       this.currentGame.jackpot = parseInt(this.game.jackpot)
 
       this.currentGame.deadline = this.game.deadline
       const deadlineArray = this.game.deadline.split(' ')
-      this.deadline_date = deadlineArray[0]
-      this.deadline_time = deadlineArray[1]
+      console.log({ deadlineArray })
+      this.currentGame.deadline_date = deadlineArray[0]
+      this.currentGame.deadline_time = deadlineArray[1]
     }
+
+    this.$nextTick(() => {
+      this.gameLoaded = true
+    })
   },
 
   methods: {
-    setUpGame () {
-      console.log('Setting up game')
+    saveGame () {
+      console.log('Saving game')
+      if (
+        this.currentGame.week_no !== parseInt(this.game.week_no) &&
+        this.currentDeadline !== parseInt(this.game.deadline) &&
+        this.currentGame.jackpot !== parseInt(this.game.jackpot)
+      ) {
+        this.saveMode = 'create'
+
+        // console.log('Creating new game')
+        const saveGameFormData = new FormData()
+        saveGameFormData.append('save_mode', this.saveMode)
+        saveGameFormData.append('game_id', this.currentGame.game_id)
+        saveGameFormData.append('week_no', this.currentGame.week_no)
+        saveGameFormData.append('deadline_date', this.currentGame.deadline_date + ' ' + this.currentGame.deadline_time)
+        saveGameFormData.append('jackpot', this.currentGame.jackpot)
+
+        const options = {
+          method: 'POST',
+          headers: { 'content-type': 'application/form-data' },
+          data: saveGameFormData,
+          url: process.env.VUE_APP_BASE_URL + '/api/save-game.php'
+        }
+
+        this.axios(options)
+          .then(response => {
+            console.log({ response })
+            if (response.data.status === 'success' && response.data.message.length) {
+              this.userResponse = response.data.message
+            } else {
+              this.errors.push(response.data.error)
+            }
+          })
+          .catch(error => {
+            const errorOutput = { id: this.errors.length + 1, message: error }
+            this.errors.push(errorOutput)
+          })
+      } else {
+        this.saveMode = 'update'
+
+        // console.log('Creating new game')
+        const saveGameFormData = new FormData()
+        saveGameFormData.append('save_mode', this.saveMode)
+        saveGameFormData.append('game_id', this.currentGame.game_id)
+        saveGameFormData.append('week_no', this.currentGame.week_no)
+        saveGameFormData.append('deadline_date', this.currentGame.deadline_date + ' ' + this.currentGame.deadline_time)
+        saveGameFormData.append('jackpot', this.currentGame.jackpot)
+
+        const options = {
+          method: 'POST',
+          headers: { 'content-type': 'application/form-data' },
+          data: saveGameFormData,
+          url: process.env.VUE_APP_BASE_URL + '/api/save-game.php'
+        }
+
+        this.axios(options)
+          .then(response => {
+            console.log({ response })
+            if (response.data.status === 'success' && response.data.message.length) {
+              this.userResponse = response.data.message
+            } else {
+              this.errors.push(response.data.error)
+            }
+          })
+          .catch(error => {
+            const errorOutput = { id: this.errors.length + 1, message: error }
+            this.errors.push(errorOutput)
+          })
+      }
     }
   },
 
