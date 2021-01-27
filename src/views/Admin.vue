@@ -7,7 +7,7 @@
         <div
           class="form-signin container flex flex-row items-start justify-center flex-wrap"
         >
-          <p>{{ game }}</p>
+          <!-- <p>{{ game }}</p> -->
           <form
             class="form-signin container flex flex-row items-start justify-center flex-wrap"
             action="#"
@@ -31,8 +31,8 @@
 
             <button class="btn py-2 px-8 rounded-sm bg-green-500 text-white transition-all hover:bg-green-700" type="submit">Submit</button>
           </form>
-          <p>{{ currentGame }}</p>
-          <p>{{ currentDeadline }}</p>
+          <!-- <p>{{ currentGame }}</p> -->
+          <!-- <p>{{ currentDeadline }}</p> -->
 
           <div
             class="w-full flex items-center justify-center flex-nowrap my-4 py-2 px-4 rounded-sm bg-red-500 text-white"
@@ -80,6 +80,9 @@ export default {
   },
 
   methods: {
+    setUpGame () {
+      console.log('Setting up game')
+    }
   },
 
   computed: {

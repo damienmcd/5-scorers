@@ -23,7 +23,7 @@
           </router-link>
           <router-link
             v-if="user.role == 'admin'"
-            to="/pick-scorers"
+            to="/admin"
             class="main-menu__item mb-4 p-4 rounded-lg bg-green-500 bg-gradient-to-r from-green-700 transition-all hover:bg-green-700"
           >
             <img class="main-menu__item__icon" src="/icons/trophy-line.svg" alt="Add Player Icon" width="75" height="75">
