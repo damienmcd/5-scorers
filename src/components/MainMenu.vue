@@ -29,14 +29,14 @@
             <img class="main-menu__item__icon" src="/icons/trophy-line.svg" alt="Add Player Icon" width="75" height="75">
             <div class="text-center uppercase">Set Up Game</div>
           </router-link>
-          <router-link
+          <!-- <router-link
             v-if="user.role == 'admin'"
             to="/pick-scorers"
             class="main-menu__item mb-4 p-4 rounded-lg bg-green-500 bg-gradient-to-r from-green-700 transition-all hover:bg-green-700"
           >
             <img class="main-menu__item__icon" src="/icons/table.svg" alt="Add Player Icon" width="75" height="75">
             <div class="text-center uppercase">All Scorers</div>
-          </router-link>
+          </router-link> -->
         </div>
       </div>
     </div>

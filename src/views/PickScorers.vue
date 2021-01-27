@@ -1,12 +1,14 @@
 <template>
   <div class="home container flex flex-row items-start justify-center flex-wrap min-h-fill-d px-6 pt-12">
     <div class="max-w-screen-sm flex items-center justify-center flex-wrap">
-      <h1 class="font-sans text-lg antialiased font-light mb-6">Pick your 5 scorers</h1>
+      <h1 class="font-sans text-lg antialiased font-light mb-6">Pick your 5 Scorers</h1>
 
       <div class="form-wrapper container flex flex-row items-start justify-center flex-wrap mb-8 p-6 shadow-lg rounded-lg bg-white">
         <div
           class="form-signin container flex flex-row items-start justify-center flex-wrap"
         >
+          <h2 class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center">Game Deadline:</h2>
+          <p class="font-sans antialiased font-light mb-4 flex-grow-1 flex-shrink-0 w-full text-center">{{ gameDeadline }}</p>
           <form
             class="form-signin container flex flex-row items-start justify-center flex-wrap"
             action="#"
@@ -57,6 +59,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'PickScorers',
@@ -107,6 +110,7 @@ export default {
         pickScorersFormData.append('scorer3', this.scorers.scorer3)
         pickScorersFormData.append('scorer4', this.scorers.scorer4)
         pickScorersFormData.append('scorer5', this.scorers.scorer5)
+        pickScorersFormData.append('game_deadline', this.game.deadline)
 
         const options = {
           method: 'POST',
@@ -117,27 +121,27 @@ export default {
 
         this.axios(options)
           .then(response => {
-            // console.log({ response })
             if (response.data.status === 'success' && response.data.message.length) {
-              // console.log('response.data')
-              // console.log(response.data)
               this.userResponse = response.data.message
             } else {
-              this.response = response.data.message
-              this.errors.push(response.data.message)
+              this.errors.push(response.data.error)
             }
           })
           .catch(error => {
             const errorOutput = { id: this.errors.length + 1, message: error }
             this.errors.push(errorOutput)
-            // console.log(this.errors)
           })
       }
     }
   },
 
   computed: {
-    ...mapGetters(['currentPicks'])
+    ...mapGetters(['currentPicks']),
+    ...mapGetters(['game']),
+
+    gameDeadline () {
+      return moment(this.game.deadline).format('dddd, Do of MMMM YYYY, h:mma')
+    }
   }
 }
 </script>

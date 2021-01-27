@@ -30,7 +30,7 @@
           v-if="$store.getters.user.loggedIn"
           to="/dashboard"
           class="block mt-4 lg:inline-block lg:mt-0 text-green-200 hover:text-white mr-4">
-            Dashboard
+            Main Menu
         </router-link>
       </div>
       <div>

@@ -1,6 +1,5 @@
 <template>
   <MainMenu v-if="gameReady" />
-  <!-- <PickScorers v-if="gameReady" /> -->
 </template>
 
 <script>
