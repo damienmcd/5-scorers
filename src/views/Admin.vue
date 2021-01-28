@@ -7,8 +7,8 @@
         <div
           class="form-signin container flex flex-row items-start justify-center flex-wrap"
         >
-          <p>{{ game }}</p>
-          <p>{{ currentGame }}</p>
+          <p class="mb-4">{{ game }}</p>
+          <p class="mb-4">{{ currentGame }}</p>
           <form
             v-if="gameLoaded"
             class="form-signin container flex flex-row items-start justify-center flex-wrap"
@@ -107,6 +107,7 @@ export default {
         this.currentGame.jackpot !== parseInt(this.game.jackpot)
       ) {
         this.saveMode = 'create'
+        console.log('saveMode: ' + this.saveMode)
 
         // console.log('Creating new game')
         const saveGameFormData = new FormData()
@@ -128,6 +129,7 @@ export default {
             console.log({ response })
             if (response.data.status === 'success' && response.data.message.length) {
               this.userResponse = response.data.message
+              this.$store.dispatch('getCurrentGame')
             } else {
               this.errors.push(response.data.error)
             }
@@ -138,6 +140,7 @@ export default {
           })
       } else {
         this.saveMode = 'update'
+        console.log('saveMode: ' + this.saveMode)
 
         // console.log('Creating new game')
         const saveGameFormData = new FormData()
@@ -159,6 +162,7 @@ export default {
             console.log({ response })
             if (response.data.status === 'success' && response.data.message.length) {
               this.userResponse = response.data.message
+              this.$store.dispatch('getCurrentGame')
             } else {
               this.errors.push(response.data.error)
             }

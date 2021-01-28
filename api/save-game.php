@@ -7,41 +7,41 @@ $response = array();
 
 if (isset($_POST['save_mode']) and isset($_POST['game_id']) and isset($_POST['week_no']) and isset($_POST['deadline_date']) and isset($_POST['jackpot'])) {
     $save_mode = $_POST['save_mode'];
-    $game_id = (int)$_POST['game_id'];
-    $week_no = (int)$_POST['week_no'];
+    $game_id = $_POST['game_id'];
+    $week_no = $_POST['week_no'];
     $deadline_date = $_POST['deadline_date'];
-    $jackpot = (int)$_POST['jackpot'];
+    $jackpot = $_POST['jackpot'];
 
     $response['deadline_date'] = $deadline_date;
     $response['save_mode'] = $save_mode;
 
+    // $post_data = array();
+    // $post_data['save_mode'] = $save_mode;
+    // $post_data['game_id'] = $game_id;
+    // $post_data['week_no'] = $week_no;
+    // $post_data['deadline_date'] = $deadline_date;
+    // $post_data['jackpot'] = $jackpot;
+    // $response['post_data'] = $post_data;
+
     if ($save_mode == 'update') {
-        $query = "SELECT game_id, game_week_no, game_deadline, game_jackpot FROM `tbl_game_weeks` WHERE `game_id` = '$game_id' ORDER BY game_id DESC LIMIT 1";
+        // $query = "SELECT picks_user_id, picks_game_id FROM `tbl_player_picks` WHERE picks_user_id='$user_id' and picks_game_id='$game_id'";
+        $query = "SELECT game_id, game_week_no, game_deadline, game_jackpot FROM `tbl_game_weeks` WHERE game_id='$game_id' ORDER BY game_id DESC LIMIT 1";
 
         $results = mysqli_query($conn, $query) or die(mysqli_error($conn));
         $count = mysqli_num_rows($results);
 
-        while ($result = mysqli_fetch_object($results)) {
-            $game_id = $result->game_id;
-        }
-        if ($count > 0) {
-            $update_query = "UPDATE `tbl_game_weeks` SET `game_week_no` = $week_no AND `game_deadline` = '$deadline_date' AND `game_jackpot` = '$jackpot' WHERE `tbl_game_weeks`.`game_id` = $game_id";
+        if ($count == 1) {
+            // Edit picks
+            $update_query = "UPDATE `tbl_game_weeks` SET game_week_no = '$week_no', game_deadline = '$deadline_date', game_jackpot = '$jackpot' WHERE game_id='$game_id'";
 
             $update_results = mysqli_query($conn, $update_query) or die(mysqli_error($conn));
 
             if ($update_results) {
-                $game = array();
-                $game['id'] = $game_id;
-                $game['week_no'] = $week_no;
-                $game['deadline'] = $deadline_date;
-                $game['jackpot'] = $jackpot;
-
                 $response['status'] = 'success';
-                $response['game'] = $game;
-                $response['message'] = 'Game updated.';
+                $response['message'] = 'Picks updated';
             } else {
                 $response['status'] = 'error';
-                $response['error'] = 'No game found';
+                $response['error'] = 'Error updating scorers';
             }
         } else {
             $response['status'] = 'error';

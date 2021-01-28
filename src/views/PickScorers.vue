@@ -7,7 +7,8 @@
         <div
           class="form-signin container flex flex-row items-start justify-center flex-wrap"
         >
-          <h2 class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center">Game Deadline:</h2>
+          <h2 class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center">Game Week {{ game.week_no }}</h2>
+          <p class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center">Deadline</p>
           <p class="font-sans antialiased font-light mb-4 flex-grow-1 flex-shrink-0 w-full text-center">{{ gameDeadline }}</p>
           <form
             class="form-signin container flex flex-row items-start justify-center flex-wrap"
@@ -104,7 +105,7 @@ export default {
         // console.log('Saving scorers')
         const pickScorersFormData = new FormData()
         pickScorersFormData.append('user_id', this.$store.getters.user.id)
-        pickScorersFormData.append('game_id', 1)
+        pickScorersFormData.append('game_id', this.game.id)
         pickScorersFormData.append('scorer1', this.scorers.scorer1)
         pickScorersFormData.append('scorer2', this.scorers.scorer2)
         pickScorersFormData.append('scorer3', this.scorers.scorer3)
