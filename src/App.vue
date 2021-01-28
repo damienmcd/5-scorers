@@ -18,4 +18,19 @@ export default {
 </script>
 
 <style lang="scss">
+.notification {
+  height: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+
+  &.inactive {
+    height: 0;
+    opacity: 0;
+  }
+
+  &.active {
+    height: auto;
+    opacity: 1;
+  }
+}
 </style>

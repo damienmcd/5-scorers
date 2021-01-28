@@ -47,8 +47,8 @@
           </div>
 
           <div
-            v-if="userResponse !== ''"
-            class="w-full flex items-center justify-center flex-nowrap my-4 py-2 px-4 rounded-sm bg-green-300 text-white"
+            ref="notifications"
+            class="notification w-full flex items-center justify-center flex-nowrap rounded-sm px-4 py-2 mt-2 bg-green-300 text-white"
           >
             {{ userResponse }}
           </div>
@@ -76,7 +76,8 @@ export default {
       },
       errors: [],
       userResponse: '',
-      testScorer: 514
+      testScorer: 514,
+      showNotifications: false
     }
   },
 
@@ -124,6 +125,10 @@ export default {
           .then(response => {
             if (response.data.status === 'success' && response.data.message.length) {
               this.userResponse = response.data.message
+              this.toggleNotifications()
+              window.setTimeout(() => {
+                this.toggleNotifications()
+              }, 3000)
             } else {
               this.errors.push(response.data.error)
             }
@@ -133,6 +138,17 @@ export default {
             this.errors.push(errorOutput)
           })
       }
+    },
+
+    toggleNotifications () {
+      this.showNotifications = !this.showNotifications
+      window.setTimeout(() => {
+        if (this.showNotifications) {
+          this.$refs.notifications.classList.add('active')
+        } else {
+          this.$refs.notifications.classList.remove('active')
+        }
+      }, 300)
     }
   },
 

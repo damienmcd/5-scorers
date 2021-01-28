@@ -38,10 +38,10 @@ if (isset($_POST['save_mode']) and isset($_POST['game_id']) and isset($_POST['we
 
             if ($update_results) {
                 $response['status'] = 'success';
-                $response['message'] = 'Picks updated';
+                $response['message'] = 'Game updated.';
             } else {
                 $response['status'] = 'error';
-                $response['error'] = 'Error updating scorers';
+                $response['error'] = 'Error updating game.';
             }
         } else {
             $response['status'] = 'error';

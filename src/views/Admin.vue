@@ -7,8 +7,8 @@
         <div
           class="form-signin container flex flex-row items-start justify-center flex-wrap"
         >
-          <p class="mb-4">{{ game }}</p>
-          <p class="mb-4">{{ currentGame }}</p>
+          <!-- <p class="mb-4">{{ game }}</p> -->
+          <!-- <p class="mb-4">{{ currentGame }}</p> -->
           <form
             v-if="gameLoaded"
             class="form-signin container flex flex-row items-start justify-center flex-wrap"
@@ -45,8 +45,8 @@
           </div>
 
           <div
-            v-if="userResponse !== ''"
-            class="w-full flex items-center justify-center flex-nowrap my-4 py-2 px-4 rounded-sm bg-green-300 text-white"
+            ref="notifications"
+            class="notification w-full flex items-center justify-center flex-nowrap px-4 py-2 mt-2 rounded-sm bg-green-300 text-white"
           >
             {{ userResponse }}
           </div>
@@ -74,7 +74,8 @@ export default {
       gameLoaded: false,
       saveMode: 'update',
       errors: [],
-      userResponse: ''
+      userResponse: '',
+      showNotifications: false
     }
   },
 
@@ -130,6 +131,10 @@ export default {
             if (response.data.status === 'success' && response.data.message.length) {
               this.userResponse = response.data.message
               this.$store.dispatch('getCurrentGame')
+              this.toggleNotifications()
+              window.setTimeout(() => {
+                this.toggleNotifications()
+              }, 3000)
             } else {
               this.errors.push(response.data.error)
             }
@@ -163,6 +168,10 @@ export default {
             if (response.data.status === 'success' && response.data.message.length) {
               this.userResponse = response.data.message
               this.$store.dispatch('getCurrentGame')
+              this.toggleNotifications()
+              window.setTimeout(() => {
+                this.toggleNotifications()
+              }, 3000)
             } else {
               this.errors.push(response.data.error)
             }
@@ -172,6 +181,17 @@ export default {
             this.errors.push(errorOutput)
           })
       }
+    },
+
+    toggleNotifications () {
+      this.showNotifications = !this.showNotifications
+      window.setTimeout(() => {
+        if (this.showNotifications) {
+          this.$refs.notifications.classList.add('active')
+        } else {
+          this.$refs.notifications.classList.remove('active')
+        }
+      }, 300)
     }
   },
 
