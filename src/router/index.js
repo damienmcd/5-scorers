@@ -29,6 +29,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/current-game',
+    name: 'current-game',
+    component: () => import(/* webpackChunkName: "AllCurrentGamePicks" */ '../views/AllCurrentGamePicks.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/404',
     alias: '*',
     name: 'notFound',
