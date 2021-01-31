@@ -1,11 +1,12 @@
 <template>
   <div class="current-picks max-w-screen-xl container flex flex-row items-start justify-center flex-wrap min-h-fill-d px-6 pt-12">
-    <div class="flex flex-row items-center justify-center flex-wrap">
+    <div class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap">
       <h1 class="current-picks__title font-sans text-lg text-center antialiased font-light mb-6">Current Game Picks</h1>
 
       <div
         v-for="currentGamePick in currentGamePicks"
         :key="currentGamePick.picks_user_id"
+        :class="[{'flex-half': user.role === 'user' }, {'flex-third': user.role === 'admin' }, {'flex-third': gameDeadlinePassed }]"
         class="current-picks__container container flex flex-row items-start justify-center flex-wrap mb-8 p-4 shadow-lg rounded-lg bg-white"
       >
         <div class="current-picks__user-name w-full text-center antialiased font-light mb-2">
@@ -37,13 +38,6 @@
         </div>
       </div>
     </div>
-
-    <div
-      ref="notifications"
-      class="notification w-full flex items-center justify-center flex-nowrap px-4 py-2 mt-2 rounded-sm bg-green-300 text-white"
-    >
-      {{ userResponse }}
-    </div>
   </div>
 </template>
 
@@ -57,9 +51,7 @@ export default {
   data () {
     return {
       currentGamePicks: [],
-      errors: [],
-      userResponse: '',
-      showNotifications: false
+      errors: []
     }
   },
 
@@ -73,6 +65,9 @@ export default {
       // console.log('Getting current game picks')
       const currentGamePicksFormData = new FormData()
       currentGamePicksFormData.append('game_id', this.game.id)
+      currentGamePicksFormData.append('user_id', this.user.id)
+      currentGamePicksFormData.append('user_role', this.user.role)
+      currentGamePicksFormData.append('deadline_passed', this.gameDeadlinePassed)
 
       const options = {
         method: 'POST',
@@ -85,10 +80,6 @@ export default {
         .then(response => {
           if (response.data.status === 'success' && response.data.players_picks.length) {
             this.currentGamePicks = response.data.players_picks
-            this.toggleNotifications()
-            window.setTimeout(() => {
-              this.toggleNotifications()
-            }, 3000)
           } else {
             this.errors.push(response.data.error)
           }
@@ -102,26 +93,20 @@ export default {
     playerDetails (playerId) {
       const playerObject = this.players.find(player => player.value === parseInt(playerId))
       return playerObject.text
-    },
-
-    toggleNotifications () {
-      this.showNotifications = !this.showNotifications
-      window.setTimeout(() => {
-        if (this.showNotifications) {
-          this.$refs.notifications.classList.add('active')
-        } else {
-          this.$refs.notifications.classList.remove('active')
-        }
-      }, 300)
     }
   },
 
   computed: {
     ...mapGetters(['game']),
     ...mapGetters(['players']),
+    ...mapGetters(['user']),
 
     gameDeadline () {
       return moment(this.game.deadline).format('dddd, Do of MMMM YYYY, h:mma')
+    },
+
+    gameDeadlinePassed () {
+      return moment() > moment(this.game.deadline)
     }
   }
 }
@@ -135,7 +120,7 @@ export default {
   }
 
   &__container {
-    flex: 0 0 32%;
+    flex: 0 0 49%;
   }
 }
 
@@ -150,6 +135,28 @@ export default {
     &:first-of-type {
       border-top: solid 1px #cccccc;
     }
+  }
+}
+
+.flex-half {
+  flex: 0 0 49%;
+}
+.flex-third {
+  flex: 0 0 32%;
+}
+
+@media screen and (max-width: 768px) {
+  .flex-third {
+    flex: 0 0 49%;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .flex-half {
+    flex: 0 0 100%;
+  }
+  .flex-third {
+    flex: 0 0 100%;
   }
 }
 </style>
