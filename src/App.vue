@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="min-h-screen bg-grey-100">
     <Nav />
-    <GameInfo />
+    <GameInfo v-if="showGameInfo" />
     <router-view/>
   </div>
 </template>
@@ -16,6 +16,12 @@ export default {
   components: {
     Nav,
     GameInfo
+  },
+
+  computed: {
+    showGameInfo () {
+      return this.$route.path !== '/'
+    }
   }
 }
 </script>
