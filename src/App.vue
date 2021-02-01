@@ -1,18 +1,21 @@
 <template>
   <div id="app" class="min-h-screen bg-grey-100">
     <Nav />
+    <GameInfo />
     <router-view/>
   </div>
 </template>
 
 <script>
 import Nav from '@/components/Nav.vue'
+import GameInfo from '@/components/GameInfo.vue'
 
 export default {
   name: 'App',
 
   components: {
-    Nav
+    Nav,
+    GameInfo
   }
 }
 </script>

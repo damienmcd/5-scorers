@@ -29,11 +29,11 @@
         <router-link
           v-if="$store.getters.user.loggedIn"
           to="/dashboard"
-          class="block mt-4 lg:inline-block lg:mt-0 text-green-200 hover:text-white mr-4">
+          class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200 text-center lg:text-left mr-4">
             Main Menu
         </router-link>
       </div>
-      <div>
+      <div class="text-center">
         <a
           v-if="$store.getters.user.loggedIn"
           href="#"

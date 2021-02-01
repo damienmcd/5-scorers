@@ -9,7 +9,8 @@
         >
           <h2 class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center">Game Week {{ game.week_no }}</h2>
           <p class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center">Deadline</p>
-          <p class="font-sans antialiased font-light mb-4 flex-grow-1 flex-shrink-0 w-full text-center">{{ gameDeadline }}</p>
+          <p class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center mb-2">{{ gameDeadline }}</p>
+          <h3 class="font-sans antialiased font-semibold flex-grow-1 flex-shrink-0 w-full text-center mb-4">Jackpot:  &euro;{{ game.jackpot }}</h3>
           <form
             class="form-signin container flex flex-row items-start justify-center flex-wrap"
             action="#"
