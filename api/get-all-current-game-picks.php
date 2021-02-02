@@ -59,7 +59,5 @@ if (isset($_POST['game_id']) and isset($_POST['user_role']) and isset($_POST['us
         $response['message'] = 'No picks found';
     }
 
-    $response['password'] = md5('nallymc1');
-
     echo json_encode($response);
 }
