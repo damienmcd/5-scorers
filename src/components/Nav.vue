@@ -24,13 +24,25 @@
       </button>
     </div> -->
 
-    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-      <div class="text-sm lg:flex-grow">
+    <div class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto">
+      <div class="text-sm">
         <router-link
           v-if="$store.getters.user.loggedIn"
           to="/dashboard"
-          class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-green-200 text-center lg:text-left mr-4">
+          class="block mt-4 md:inline-block md:mt-0 text-white hover:text-green-200 text-center md:text-left md:mr-6">
             Main Menu
+        </router-link>
+        <router-link
+          v-if="$store.getters.user.loggedIn"
+          to="/pick-scorers"
+          class="block mt-4 md:inline-block md:mt-0 text-white hover:text-green-200 text-center md:text-left md:mr-6">
+            Pick Scorers
+        </router-link>
+        <router-link
+          v-if="$store.getters.user.loggedIn"
+          to="/current-game"
+          class="block mt-4 md:inline-block md:mt-0 text-white hover:text-green-200 text-center md:text-left md:mr-6">
+            Current Game
         </router-link>
       </div>
       <div class="text-center">
@@ -38,7 +50,7 @@
           v-if="$store.getters.user.loggedIn"
           href="#"
           @click.prevent="logOut"
-          class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0">
+          class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 md:mt-0">
             Log Out
           </a>
 
