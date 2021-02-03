@@ -12,7 +12,7 @@
         <div class="current-picks__user-name w-full text-center antialiased font-light mb-2">
           {{ currentGamePick.user_firstname }} {{ currentGamePick.user_lastname }}
         </div>
-        <div class="player-picks w-full">
+        <div v-if="currentGameScorersLoaded" class="player-picks w-full">
           <div class="player-picks__players">
             <div
               :class="[{'bg-green-300': playerScored(currentGamePick.player_1) }]"
@@ -58,6 +58,7 @@ export default {
       currentGamePicks: [],
       currentGameWeekData: [],
       currentGameScorers: [],
+      currentGameScorersLoaded: false,
       errors: []
     }
   },
@@ -70,10 +71,8 @@ export default {
   methods: {
     getCurrentGameScorers () {
       this.errors = []
-      // console.log('Getting current game picks')
       const currentGameScorersFormData = new FormData()
       const gameWeekNo = parseInt(this.game.week_no) + 1
-      // const gameWeekNo = parseInt(this.game.week_no)
       currentGameScorersFormData.append('game_week_no', gameWeekNo)
 
       const options = {
@@ -87,13 +86,10 @@ export default {
         .then(response => {
           if (response.data.status === 'success' && response.data.game_week_data) {
             this.currentGameWeekData = Array.from(response.data.game_week_data)
-            // console.log(this.currentGameWeekData)
             this.currentGameWeekData.forEach(match => {
               const matchStats = match.stats
-              // console.log({ matchStats })
               if (matchStats.length) {
                 const goalsScored = matchStats[0]
-                console.log({ goalsScored })
                 if (goalsScored.h.length) {
                   goalsScored.h.forEach(scorer => {
                     for (let index = 0; index < scorer.value; index++) {
@@ -110,19 +106,24 @@ export default {
                 }
               }
             })
+
+            this.currentGameScorersLoaded = true
           } else {
             this.errors.push(response.data.error)
+
+            this.currentGameScorersLoaded = true
           }
         })
         .catch(error => {
           const errorOutput = { id: this.errors.length + 1, message: error }
           this.errors.push(errorOutput)
+
+          this.currentGameScorersLoaded = true
         })
     },
 
     getCurrentGamePicks () {
       this.errors = []
-      // console.log('Getting current game picks')
       const currentGamePicksFormData = new FormData()
       currentGamePicksFormData.append('game_id', this.game.id)
       currentGamePicksFormData.append('user_id', this.user.id)
@@ -156,11 +157,8 @@ export default {
     },
 
     playerScored (playerId) {
-      console.log(playerId)
-      console.log(this.currentGameScorers)
-      const playerInScorers = this.currentGameScorers.includes(playerId)
-      console.log({ playerInScorers })
-      return playerInScorers
+      const playerInScorers = this.currentGameScorers.indexOf(parseInt(playerId))
+      return playerInScorers > -1
     }
   },
 
