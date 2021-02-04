@@ -44,6 +44,12 @@
           class="block mt-4 md:inline-block md:mt-0 text-white hover:text-green-200 text-center md:text-left md:mr-6">
             Current Game
         </router-link>
+        <a
+          href="/5scorers-user-guide-2021.pdf" target="_blank"
+          class="block mt-4 md:inline-block md:mt-0 text-white hover:text-green-200 text-center md:text-left md:mr-6"
+        >
+          User Guide
+        </a>
       </div>
       <div class="text-center">
         <a
