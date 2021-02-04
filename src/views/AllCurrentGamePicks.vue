@@ -12,25 +12,30 @@
         <div class="current-picks__user-name w-full text-center antialiased font-light mb-2">
           {{ currentGamePick.user_firstname }} {{ currentGamePick.user_lastname }}
         </div>
-        <div class="player-picks w-full">
+        <div v-if="currentGameScorersLoaded" class="player-picks w-full">
           <div class="player-picks__players">
             <div
+              :class="[{'bg-green-300': playerScored(currentGamePick.player_1) }]"
               class="player-picks__player w-full text-center p-2">
               {{ playerDetails(currentGamePick.player_1) }}
             </div>
             <div
+              :class="[{'bg-green-300': playerScored(currentGamePick.player_2) }]"
               class="player-picks__player w-full text-center p-2">
               {{ playerDetails(currentGamePick.player_2) }}
             </div>
             <div
+              :class="[{'bg-green-300': playerScored(currentGamePick.player_3) }]"
               class="player-picks__player w-full text-center p-2">
               {{ playerDetails(currentGamePick.player_3) }}
             </div>
             <div
+              :class="[{'bg-green-300': playerScored(currentGamePick.player_4) }]"
               class="player-picks__player w-full text-center p-2">
               {{ playerDetails(currentGamePick.player_4) }}
             </div>
             <div
+              :class="[{'bg-green-300': playerScored(currentGamePick.player_5) }]"
               class="player-picks__player w-full text-center p-2">
               {{ playerDetails(currentGamePick.player_5) }}
             </div>
@@ -51,18 +56,74 @@ export default {
   data () {
     return {
       currentGamePicks: [],
+      currentGameWeekData: [],
+      currentGameScorers: [],
+      currentGameScorersLoaded: false,
       errors: []
     }
   },
 
-  beforeMount () {
-    this.getCurrentGamePicks()
+  async beforeMount () {
+    await this.getCurrentGameScorers()
+    await this.getCurrentGamePicks()
   },
 
   methods: {
+    getCurrentGameScorers () {
+      this.errors = []
+      const currentGameScorersFormData = new FormData()
+      const gameWeekNo = parseInt(this.game.week_no) + 1
+      currentGameScorersFormData.append('game_week_no', gameWeekNo)
+
+      const options = {
+        method: 'POST',
+        headers: { 'content-type': 'application/form-data' },
+        data: currentGameScorersFormData,
+        url: process.env.VUE_APP_BASE_URL + '/api/get-all-current-game-scorers.php'
+      }
+
+      this.axios(options)
+        .then(response => {
+          if (response.data.status === 'success' && response.data.game_week_data) {
+            this.currentGameWeekData = Array.from(response.data.game_week_data)
+            this.currentGameWeekData.forEach(match => {
+              const matchStats = match.stats
+              if (matchStats.length) {
+                const goalsScored = matchStats[0]
+                if (goalsScored.h.length) {
+                  goalsScored.h.forEach(scorer => {
+                    for (let index = 0; index < scorer.value; index++) {
+                      this.currentGameScorers.push(scorer.element)
+                    }
+                  })
+                }
+                if (goalsScored.a.length) {
+                  goalsScored.a.forEach(scorer => {
+                    for (let index = 0; index < scorer.value; index++) {
+                      this.currentGameScorers.push(scorer.element)
+                    }
+                  })
+                }
+              }
+            })
+
+            this.currentGameScorersLoaded = true
+          } else {
+            this.errors.push(response.data.error)
+
+            this.currentGameScorersLoaded = true
+          }
+        })
+        .catch(error => {
+          const errorOutput = { id: this.errors.length + 1, message: error }
+          this.errors.push(errorOutput)
+
+          this.currentGameScorersLoaded = true
+        })
+    },
+
     getCurrentGamePicks () {
       this.errors = []
-      // console.log('Getting current game picks')
       const currentGamePicksFormData = new FormData()
       currentGamePicksFormData.append('game_id', this.game.id)
       currentGamePicksFormData.append('user_id', this.user.id)
@@ -93,6 +154,11 @@ export default {
     playerDetails (playerId) {
       const playerObject = this.players.find(player => player.value === parseInt(playerId))
       return playerObject.text
+    },
+
+    playerScored (playerId) {
+      const playerInScorers = this.currentGameScorers.indexOf(parseInt(playerId))
+      return playerInScorers > -1
     }
   },
 
