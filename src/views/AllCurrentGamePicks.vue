@@ -3,6 +3,8 @@
     <div class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap">
       <h1 class="current-picks__title font-sans text-lg text-center antialiased font-light mb-6">Current Game Picks</h1>
 
+      <p>{{ currentGameScorers }}</p>
+
       <div
         v-for="currentGamePick in currentGamePicks"
         :key="currentGamePick.picks_user_id"
@@ -13,7 +15,8 @@
           {{ currentGamePick.user_firstname }} {{ currentGamePick.user_lastname }}
         </div>
         <div v-if="currentGameScorersLoaded" class="player-picks w-full">
-          <div class="player-picks__players">
+          <div class="player-picks__players" v-html="playersScored(currentGamePick)"></div>
+          <!-- <div class="player-picks__players">
             <div
               :class="[{'bg-green-300': playerScored(currentGamePick.player_1) }]"
               class="player-picks__player w-full text-center p-2">
@@ -39,7 +42,7 @@
               class="player-picks__player w-full text-center p-2">
               {{ playerDetails(currentGamePick.player_5) }}
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -72,7 +75,8 @@ export default {
     getCurrentGameScorers () {
       this.errors = []
       const currentGameScorersFormData = new FormData()
-      const gameWeekNo = parseInt(this.game.week_no) + 1
+      // const gameWeekNo = parseInt(this.game.week_no) + 1
+      const gameWeekNo = parseInt(this.game.week_no)
       currentGameScorersFormData.append('game_week_no', gameWeekNo)
 
       const options = {
@@ -158,7 +162,50 @@ export default {
 
     playerScored (playerId) {
       const playerInScorers = this.currentGameScorers.indexOf(parseInt(playerId))
+      // const playerGoals = this.currentGameScorers.filter(id => id === parseInt(playerId)).length
+      // console.log(`${this.playerDetails(playerId)} scored ${playerGoals} goals this week`)
       return playerInScorers > -1
+    },
+
+    playersScored (playerPicks) {
+      let playersHtml = ''
+      console.warn(playerPicks.user_firstname + ' ' + playerPicks.user_lastname)
+      const tempScorers = [...this.currentGameScorers]
+      console.log(this.currentGameScorers)
+      const picksScorersOnly = [
+        parseInt(playerPicks.player_1), parseInt(playerPicks.player_2), parseInt(playerPicks.player_3), parseInt(playerPicks.player_4), parseInt(playerPicks.player_5)
+      ]
+      console.log({ picksScorersOnly })
+
+      for (let index = 0; index < picksScorersOnly.length; index++) {
+        let playerHtml = ''
+        const player = picksScorersOnly[index]
+        const playerInScorers = tempScorers.indexOf(picksScorersOnly[index])
+        if (playerInScorers > -1) {
+          console.info({ tempScorers })
+          playerHtml = `
+            <div
+              class="player-picks__player w-full text-center p-2 bg-green-300">
+              ${this.playerDetails(player)}
+            </div>
+          `
+          tempScorers.splice(playerInScorers, 1)
+          console.info({ tempScorers })
+        } else {
+          playerHtml = `
+            <div
+              class="player-picks__player w-full text-center p-2">
+              ${this.playerDetails(player)}
+            </div>
+          `
+        }
+
+        playersHtml = playersHtml + playerHtml
+      }
+      console.log('playersHtml:')
+      console.log(playersHtml)
+
+      return playersHtml
     }
   },
 
