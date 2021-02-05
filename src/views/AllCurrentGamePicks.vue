@@ -3,8 +3,6 @@
     <div class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap">
       <h1 class="current-picks__title font-sans text-lg text-center antialiased font-light mb-6">Current Game Picks</h1>
 
-      <p>{{ currentGameScorers }}</p>
-
       <div
         v-for="currentGamePick in currentGamePicks"
         :key="currentGamePick.picks_user_id"
@@ -15,34 +13,7 @@
           {{ currentGamePick.user_firstname }} {{ currentGamePick.user_lastname }}
         </div>
         <div v-if="currentGameScorersLoaded" class="player-picks w-full">
-          <div class="player-picks__players" v-html="playersScored(currentGamePick)"></div>
-          <!-- <div class="player-picks__players">
-            <div
-              :class="[{'bg-green-300': playerScored(currentGamePick.player_1) }]"
-              class="player-picks__player w-full text-center p-2">
-              {{ playerDetails(currentGamePick.player_1) }}
-            </div>
-            <div
-              :class="[{'bg-green-300': playerScored(currentGamePick.player_2) }]"
-              class="player-picks__player w-full text-center p-2">
-              {{ playerDetails(currentGamePick.player_2) }}
-            </div>
-            <div
-              :class="[{'bg-green-300': playerScored(currentGamePick.player_3) }]"
-              class="player-picks__player w-full text-center p-2">
-              {{ playerDetails(currentGamePick.player_3) }}
-            </div>
-            <div
-              :class="[{'bg-green-300': playerScored(currentGamePick.player_4) }]"
-              class="player-picks__player w-full text-center p-2">
-              {{ playerDetails(currentGamePick.player_4) }}
-            </div>
-            <div
-              :class="[{'bg-green-300': playerScored(currentGamePick.player_5) }]"
-              class="player-picks__player w-full text-center p-2">
-              {{ playerDetails(currentGamePick.player_5) }}
-            </div>
-          </div> -->
+          <div v-html="playersScored(currentGamePick)"></div>
         </div>
       </div>
     </div>
@@ -75,8 +46,8 @@ export default {
     getCurrentGameScorers () {
       this.errors = []
       const currentGameScorersFormData = new FormData()
-      // const gameWeekNo = parseInt(this.game.week_no) + 1
-      const gameWeekNo = parseInt(this.game.week_no)
+      const gameWeekNo = parseInt(this.game.week_no) + 1
+      // const gameWeekNo = parseInt(this.game.week_no)
       currentGameScorersFormData.append('game_week_no', gameWeekNo)
 
       const options = {
@@ -160,15 +131,8 @@ export default {
       return playerObject.text
     },
 
-    playerScored (playerId) {
-      const playerInScorers = this.currentGameScorers.indexOf(parseInt(playerId))
-      // const playerGoals = this.currentGameScorers.filter(id => id === parseInt(playerId)).length
-      // console.log(`${this.playerDetails(playerId)} scored ${playerGoals} goals this week`)
-      return playerInScorers > -1
-    },
-
     playersScored (playerPicks) {
-      let playersHtml = ''
+      let playersHtml = '<div class="player-picks__players">'
       console.warn(playerPicks.user_firstname + ' ' + playerPicks.user_lastname)
       const tempScorers = [...this.currentGameScorers]
       console.log(this.currentGameScorers)
@@ -205,6 +169,8 @@ export default {
       console.log('playersHtml:')
       console.log(playersHtml)
 
+      playersHtml = playersHtml + '<div>'
+
       return playersHtml
     }
   },
@@ -237,20 +203,6 @@ export default {
   }
 }
 
-.player-picks {
-  box-sizing: border-box;
-
-  &__player {
-    border-left: solid 1px #cccccc;
-    border-right: solid 1px #cccccc;
-    border-bottom: solid 1px #cccccc;
-
-    &:first-of-type {
-      border-top: solid 1px #cccccc;
-    }
-  }
-}
-
 .flex-half {
   flex: 0 0 49%;
 }
@@ -270,6 +222,22 @@ export default {
   }
   .flex-third {
     flex: 0 0 100%;
+  }
+}
+</style>
+
+<style lang="scss">
+.player-picks {
+  box-sizing: border-box;
+
+  &__player {
+    border-left: solid 1px #cccccc;
+    border-right: solid 1px #cccccc;
+    border-bottom: solid 1px #cccccc;
+
+    &:first-of-type {
+      border-top: solid 1px #cccccc;
+    }
   }
 }
 </style>
