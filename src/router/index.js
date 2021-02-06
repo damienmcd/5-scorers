@@ -35,6 +35,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/change-password',
+    name: 'change-password',
+    component: () => import(/* webpackChunkName: "ChangePassword" */ '../views/ChangePassword.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/404',
     alias: '*',
     name: 'notFound',
