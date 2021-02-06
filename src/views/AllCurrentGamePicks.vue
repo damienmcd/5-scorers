@@ -141,13 +141,10 @@ export default {
 
     playersScored (playerPicks) {
       let playersHtml = ''
-      console.warn(playerPicks.user_firstname + ' ' + playerPicks.user_lastname)
       const tempScorers = [...this.currentGameScorers]
-      console.log(this.currentGameScorers)
       const picksScorersOnly = [
         parseInt(playerPicks.player_1), parseInt(playerPicks.player_2), parseInt(playerPicks.player_3), parseInt(playerPicks.player_4), parseInt(playerPicks.player_5)
       ]
-      console.log({ picksScorersOnly })
       let scorersTotal = 0
 
       for (let index = 0; index < picksScorersOnly.length; index++) {
@@ -155,7 +152,6 @@ export default {
         const player = picksScorersOnly[index]
         const playerInScorers = tempScorers.indexOf(picksScorersOnly[index])
         if (playerInScorers > -1) {
-          console.info({ tempScorers })
           playerHtml = `
             <div
               class="player-picks__player w-full text-center p-2 bg-green-300">
@@ -163,7 +159,6 @@ export default {
             </div>
           `
           tempScorers.splice(playerInScorers, 1)
-          console.info({ tempScorers })
           scorersTotal++
         } else {
           playerHtml = `
@@ -176,8 +171,6 @@ export default {
 
         playersHtml = playersHtml + playerHtml
       }
-      console.log('playersHtml:')
-      console.log(playersHtml)
 
       playersHtml = playersHtml + `
       <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2">
