@@ -39,6 +39,7 @@ export default {
       currentGamePicks: [],
       currentGameWeekData: [],
       currentGameScorers: [],
+      matchFinishedByTeam: [],
       currentGameScorersLoaded: false,
       errors: [],
       dataLoaded: false
@@ -70,6 +71,9 @@ export default {
           if (response.data.status === 'success' && response.data.game_week_data) {
             this.currentGameWeekData = Array.from(response.data.game_week_data)
             this.currentGameWeekData.forEach(match => {
+              this.matchFinishedByTeam.push({ team: match.team_h, finished: match.finished_provisional })
+              this.matchFinishedByTeam.push({ team: match.team_a, finished: match.finished_provisional })
+
               const matchStats = match.stats
               if (matchStats.length) {
                 const goalsScored = matchStats[0]
@@ -149,24 +153,38 @@ export default {
 
       for (let index = 0; index < picksScorersOnly.length; index++) {
         let playerHtml = ''
-        const player = picksScorersOnly[index]
-        const playerInScorers = tempScorers.indexOf(picksScorersOnly[index])
+        const playerId = picksScorersOnly[index]
+        const playerInScorers = tempScorers.indexOf(playerId)
+
+        const playerDetails = this.players.find(({ value }) => value === playerId)
+
         if (playerInScorers > -1) {
           playerHtml = `
             <div
               class="player-picks__player w-full text-center p-2 bg-green-300">
-              ${this.playerDetails(player)}
+              ${this.playerDetails(playerId)}
             </div>
           `
           tempScorers.splice(playerInScorers, 1)
           scorersTotal++
         } else {
-          playerHtml = `
-            <div
-              class="player-picks__player w-full text-center p-2">
-              ${this.playerDetails(player)}
-            </div>
-          `
+          const matchTeam = this.matchFinishedByTeam.find(({ team }) => team === playerDetails.team_id)
+
+          if (matchTeam.finished) {
+            playerHtml = `
+              <div
+                class="player-picks__player w-full text-center p-2 bg-red-300">
+                ${this.playerDetails(playerId)}
+              </div>
+            `
+          } else {
+            playerHtml = `
+              <div
+                class="player-picks__player w-full text-center p-2">
+                ${this.playerDetails(playerId)}
+              </div>
+            `
+          }
         }
 
         playersHtml = playersHtml + playerHtml

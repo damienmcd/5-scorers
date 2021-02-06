@@ -38,6 +38,7 @@ if ($status_code === 200) {
         $team = $item['team'];
         $team_name = $teams[$team - 1]['name'];
         $player['text'] = $web_name . ' - ' . $team_name;
+        $player['team_id'] = $teams[$team - 1]['id'];
 
         $players[] = $player;
     }
