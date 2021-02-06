@@ -1,5 +1,6 @@
 <template>
   <div class="current-picks max-w-screen-xl container flex flex-row items-start justify-center flex-wrap min-h-fill-d px-6 pt-12">
+    <Loader v-show="!dataLoaded" />
     <div class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap">
       <h1 class="current-picks__title font-sans text-lg text-center antialiased font-light mb-6">Current Game Picks</h1>
 
@@ -23,9 +24,15 @@
 <script>
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+import Loader from '../components/Loader'
 
 export default {
   name: 'PickScorers',
+
+  components: {
+    Loader
+  },
+
   props: {},
   data () {
     return {
@@ -33,7 +40,8 @@ export default {
       currentGameWeekData: [],
       currentGameScorers: [],
       currentGameScorersLoaded: false,
-      errors: []
+      errors: [],
+      dataLoaded: false
     }
   },
 
@@ -170,6 +178,8 @@ export default {
       console.log(playersHtml)
 
       playersHtml = playersHtml + '<div>'
+
+      this.dataLoaded = true
 
       return playersHtml
     }
