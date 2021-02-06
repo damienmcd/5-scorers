@@ -140,7 +140,7 @@ export default {
     },
 
     playersScored (playerPicks) {
-      let playersHtml = '<div class="player-picks__players">'
+      let playersHtml = ''
       console.warn(playerPicks.user_firstname + ' ' + playerPicks.user_lastname)
       const tempScorers = [...this.currentGameScorers]
       console.log(this.currentGameScorers)
@@ -148,6 +148,7 @@ export default {
         parseInt(playerPicks.player_1), parseInt(playerPicks.player_2), parseInt(playerPicks.player_3), parseInt(playerPicks.player_4), parseInt(playerPicks.player_5)
       ]
       console.log({ picksScorersOnly })
+      let scorersTotal = 0
 
       for (let index = 0; index < picksScorersOnly.length; index++) {
         let playerHtml = ''
@@ -163,6 +164,7 @@ export default {
           `
           tempScorers.splice(playerInScorers, 1)
           console.info({ tempScorers })
+          scorersTotal++
         } else {
           playerHtml = `
             <div
@@ -177,11 +179,26 @@ export default {
       console.log('playersHtml:')
       console.log(playersHtml)
 
-      playersHtml = playersHtml + '<div>'
+      playersHtml = playersHtml + `
+      <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2">
+        <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
+         x <span class="ml-2 player-picks__players__scorers-number">${scorersTotal}</span>
+      </div>`
+
+      playersHtml = playersHtml + '</div>'
+
+      let playerPicksHtml = ''
+      if (scorersTotal === 5) {
+        playerPicksHtml = playerPicksHtml + '<div class="player-picks__players player-picks__players--winner">'
+      } else {
+        playerPicksHtml = playerPicksHtml + '<div class="player-picks__players">'
+      }
+      playerPicksHtml = playerPicksHtml + playersHtml
+      playerPicksHtml = playerPicksHtml + '</div>'
 
       this.dataLoaded = true
 
-      return playersHtml
+      return playerPicksHtml
     }
   },
 
@@ -239,6 +256,24 @@ export default {
 <style lang="scss">
 .player-picks {
   box-sizing: border-box;
+
+  &__players {
+    &__scorers-ball {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+    }
+
+    &__scorers-number {
+      font-size: 21px;
+    }
+
+    &--winner {
+      .player-picks__players__scorers-total {
+        background-color: rgba(253, 230, 138, var(--tw-bg-opacity));
+      }
+    }
+  }
 
   &__player {
     border-left: solid 1px #cccccc;
