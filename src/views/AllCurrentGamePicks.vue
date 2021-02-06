@@ -190,11 +190,22 @@ export default {
         playersHtml = playersHtml + playerHtml
       }
 
-      playersHtml = playersHtml + `
-      <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2">
-        <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
-         x <span class="ml-2 player-picks__players__scorers-number">${scorersTotal}</span>
-      </div>`
+      if (scorersTotal === 5) {
+        playersHtml = playersHtml + `
+        <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2">
+          <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
+          <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
+          <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
+          <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
+          <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
+        </div>`
+      } else {
+        playersHtml = playersHtml + `
+        <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2">
+          <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
+          x <span class="ml-2 player-picks__players__scorers-number">${scorersTotal}</span>
+        </div>`
+      }
 
       playersHtml = playersHtml + '</div>'
 
