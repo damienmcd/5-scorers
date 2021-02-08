@@ -58,8 +58,8 @@
           href="#"
           @click.prevent="logOut"
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 md:mt-0">
-            Log Out
-          </a>
+          Log Out
+        </a>
 
         <router-link
           v-else
@@ -67,6 +67,14 @@
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mt-4 lg:mt-0">
             Log In
         </router-link>
+
+        <a
+          v-if="$store.getters.user.loggedIn && user.role === 'admin' && $route.name == 'current-game'"
+          href="#"
+          @click.prevent="createPicksCsv"
+          class="inline-block text-sm px-4 py-2 leading-none border rounded text-green-500 border-white bg-white hover:border-transparent hover:text-white hover:bg-green-500 mt-4 md:mt-0 ml-2">
+          Export Picks
+        </a>
       </div>
     </div>
   </nav>
@@ -82,11 +90,16 @@ export default {
     logOut () {
       this.$store.dispatch('logOut')
       this.$router.push('/')
+    },
+
+    createPicksCsv () {
+      console.log('Creating CSV of picks for week ' + this.game.week_no)
     }
   },
 
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    ...mapGetters(['game'])
   }
 }
 </script>
