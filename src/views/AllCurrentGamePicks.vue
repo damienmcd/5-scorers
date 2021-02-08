@@ -1,7 +1,24 @@
 <template>
   <div class="current-picks max-w-screen-xl container flex flex-row items-start justify-center flex-wrap min-h-fill-d px-6 pt-12">
     <Loader v-show="!dataLoaded" />
-    <div class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap">
+    <div class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap relative">
+      <div v-if="user.role === 'admin'">
+        <a
+          v-show="user.role === 'admin' && !csvGenerated"
+          href="#"
+          @click.prevent="createPicksCsv"
+          class="btn--export-picks inline-block text-sm px-4 py-2 leading-none border rounded bg-green-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mb-4 md:mb-0 relative md:absolute">
+          Export Picks to CSV
+        </a>
+        <a
+          v-show="user.role === 'admin' && csvGenerated && csvLocation !== ''"
+          ref="csvDownloadButton"
+          href="#" target="_blank"
+          download
+          class="btn--export-picks inline-block text-sm px-4 py-2 leading-none border rounded bg-grey-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mb-4 md:mb-0 relative md:absolute">
+          Download CSV
+        </a>
+      </div>
       <h1 class="current-picks__title font-sans text-lg text-center antialiased font-light mb-6">Current Game Picks</h1>
 
       <div
@@ -41,6 +58,8 @@ export default {
       currentGameScorers: [],
       matchFinishedByTeam: [],
       currentGameScorersLoaded: false,
+      csvGenerated: false,
+      csvLocation: '',
       errors: [],
       dataLoaded: false
     }
@@ -221,6 +240,52 @@ export default {
       this.dataLoaded = true
 
       return playerPicksHtml
+    },
+
+    createPicksCsv () {
+      console.log('Creating CSV of picks for week ' + this.game.week_no)
+      console.log(this.currentGamePicks)
+      const picksArray = []
+      this.currentGamePicks.forEach(userPicks => {
+        const userPicksArray = []
+        userPicksArray.push(userPicks.user_firstname + ' ' + userPicks.user_lastname)
+        userPicksArray.push(this.playerDetails(userPicks.player_1))
+        userPicksArray.push(this.playerDetails(userPicks.player_2))
+        userPicksArray.push(this.playerDetails(userPicks.player_3))
+        userPicksArray.push(this.playerDetails(userPicks.player_4))
+        userPicksArray.push(this.playerDetails(userPicks.player_5))
+
+        picksArray.push(userPicksArray)
+      })
+      console.log({ picksArray })
+
+      this.errors = []
+      const createPicksCsvFormData = new FormData()
+      createPicksCsvFormData.append('game_week_no', this.game.week_no)
+      createPicksCsvFormData.append('picks', JSON.stringify(picksArray))
+
+      const options = {
+        method: 'POST',
+        headers: { 'content-type': 'application/form-data' },
+        data: createPicksCsvFormData,
+        url: process.env.VUE_APP_BASE_URL + '/api/create-picks-csv.php'
+      }
+
+      this.axios(options)
+        .then(response => {
+          if (response.data.status === 'success' && response.data.result === 'CSV Created' && response.data.file_url !== '') {
+            this.csvGenerated = true
+            this.csvLocation = response.data.file_url
+            this.$refs.csvDownloadButton.setAttribute('href', this.csvLocation)
+            console.log(this.csvLocation)
+          } else {
+            this.errors.push(response.data.error)
+          }
+        })
+        .catch(error => {
+          const errorOutput = { id: this.errors.length + 1, message: error }
+          this.errors.push(errorOutput)
+        })
     }
   },
 
@@ -242,6 +307,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.btn--export-picks {
+  right: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+}
+
 .current-picks {
   &__title {
     flex: 1 0 100%;
