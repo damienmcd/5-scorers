@@ -4,18 +4,16 @@
     <div class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap relative">
       <div v-if="user.role === 'admin'">
         <a
-          v-show="user.role === 'admin'"
           href="#"
           @click.prevent="createPicksCsv"
           class="btn--export-picks inline-block text-sm px-4 py-2 leading-none border rounded bg-green-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mb-4 md:mb-0 relative md:absolute">
-          Export Picks to CSV
+          Export Picks
         </a>
         <a
           v-show="false"
           ref="csvDownloadButton"
           href="#" target="_blank"
-          download=""
-          class="btn--export-picks inline-block text-sm px-4 py-2 leading-none border rounded bg-grey-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mb-4 md:mb-0 relative md:absolute">
+          download="">
           Download CSV
         </a>
       </div>
