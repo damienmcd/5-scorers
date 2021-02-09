@@ -4,17 +4,17 @@
     <div class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap relative">
       <div v-if="user.role === 'admin'">
         <a
-          v-show="user.role === 'admin' && !csvGenerated"
+          v-show="user.role === 'admin'"
           href="#"
           @click.prevent="createPicksCsv"
           class="btn--export-picks inline-block text-sm px-4 py-2 leading-none border rounded bg-green-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mb-4 md:mb-0 relative md:absolute">
           Export Picks to CSV
         </a>
         <a
-          v-show="user.role === 'admin' && csvGenerated && csvLocation !== ''"
+          v-show="false"
           ref="csvDownloadButton"
           href="#" target="_blank"
-          download
+          download=""
           class="btn--export-picks inline-block text-sm px-4 py-2 leading-none border rounded bg-grey-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mb-4 md:mb-0 relative md:absolute">
           Download CSV
         </a>
@@ -244,7 +244,6 @@ export default {
 
     createPicksCsv () {
       console.log('Creating CSV of picks for week ' + this.game.week_no)
-      console.log(this.currentGamePicks)
       const picksArray = []
       this.currentGamePicks.forEach(userPicks => {
         const userPicksArray = []
@@ -257,35 +256,45 @@ export default {
 
         picksArray.push(userPicksArray)
       })
-      console.log({ picksArray })
 
       this.errors = []
-      const createPicksCsvFormData = new FormData()
-      createPicksCsvFormData.append('game_week_no', this.game.week_no)
-      createPicksCsvFormData.append('picks', JSON.stringify(picksArray))
 
-      const options = {
-        method: 'POST',
-        headers: { 'content-type': 'application/form-data' },
-        data: createPicksCsvFormData,
-        url: process.env.VUE_APP_BASE_URL + '/api/create-picks-csv.php'
-      }
+      let csv = 'User,Scorer 1,Scorer 2,Scorer 3,Scorer 4,Scorer 5\n'
+      picksArray.forEach((row) => {
+        csv += row.join(',')
+        csv += '\n'
+      })
+      this.$refs.csvDownloadButton.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv))
+      this.$refs.csvDownloadButton.setAttribute('download', '5Scorers-picks-week-' + this.game.week_no + '.csv')
+      this.csvGenerated = true
+      this.$refs.csvDownloadButton.click()
 
-      this.axios(options)
-        .then(response => {
-          if (response.data.status === 'success' && response.data.result === 'CSV Created' && response.data.file_url !== '') {
-            this.csvGenerated = true
-            this.csvLocation = response.data.file_url
-            this.$refs.csvDownloadButton.setAttribute('href', this.csvLocation)
-            console.log(this.csvLocation)
-          } else {
-            this.errors.push(response.data.error)
-          }
-        })
-        .catch(error => {
-          const errorOutput = { id: this.errors.length + 1, message: error }
-          this.errors.push(errorOutput)
-        })
+      // const createPicksCsvFormData = new FormData()
+      // createPicksCsvFormData.append('game_week_no', this.game.week_no)
+      // createPicksCsvFormData.append('picks', JSON.stringify(picksArray))
+
+      // const options = {
+      //   method: 'POST',
+      //   headers: { 'content-type': 'application/form-data' },
+      //   data: createPicksCsvFormData,
+      //   url: process.env.VUE_APP_BASE_URL + '/api/create-picks-csv.php'
+      // }
+
+      // this.axios(options)
+      //   .then(response => {
+      //     if (response.data.status === 'success' && response.data.result === 'CSV Created' && response.data.file_url !== '') {
+      //       this.csvGenerated = true
+      //       this.csvLocation = response.data.file_url
+      //       this.$refs.csvDownloadButton.setAttribute('href', this.csvLocation)
+      //       console.log(this.csvLocation)
+      //     } else {
+      //       this.errors.push(response.data.error)
+      //     }
+      //   })
+      //   .catch(error => {
+      //     const errorOutput = { id: this.errors.length + 1, message: error }
+      //     this.errors.push(errorOutput)
+      //   })
     }
   },
 
