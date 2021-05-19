@@ -72,7 +72,7 @@ export default {
     getCurrentGameScorers () {
       this.errors = []
       const currentGameScorersFormData = new FormData()
-      const gameWeekNo = parseInt(this.game.week_no) + 1
+      const gameWeekNo = parseInt(this.game.week_no)
       // const gameWeekNo = parseInt(this.game.week_no)
       currentGameScorersFormData.append('game_week_no', gameWeekNo)
 
