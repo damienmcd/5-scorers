@@ -15,6 +15,7 @@ if (isset($_POST['game_week_no'])) {
     curl_setopt($curl_handler, CURLOPT_HEADER, 0);
     curl_setopt($curl_handler, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($curl_handler, CURLOPT_FAILONERROR, true);
+    curl_setopt($curl_handler, CURLOPT_SSL_VERIFYPEER, 0);
 
     $data = curl_exec($curl_handler);
     $data = json_decode($data, true);
