@@ -7,9 +7,10 @@ curl_setopt($curl_handler, CURLOPT_URL, "https://fantasy.premierleague.com/api/b
 curl_setopt($curl_handler, CURLOPT_HEADER, 0);
 curl_setopt($curl_handler, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($curl_handler, CURLOPT_FAILONERROR, true);
+curl_setopt($curl_handler, CURLOPT_SSL_VERIFYPEER, 0);
 
-$data = curl_exec($curl_handler);
-$data = json_decode($data, true);
+$curl_data = curl_exec($curl_handler);
+$data = json_decode($curl_data, true);
 
 $status_code = curl_getinfo($curl_handler, CURLINFO_HTTP_CODE);
 
@@ -20,8 +21,10 @@ $teams = array();
 $players = array();
 
 $response['status'] = $status_code;
+$response['curl_error'] = curl_error($curl_handler);
 
 if ($status_code === 200) {
+    $response['success'] = 'Got player data';
     foreach ($data['teams'] as $key => $item) {
         $team = array();
         $team['id'] = $item['id'];
