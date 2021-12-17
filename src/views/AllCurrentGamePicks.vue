@@ -54,6 +54,7 @@ export default {
       currentGamePicks: [],
       currentGameWeekData: [],
       currentGameScorers: [],
+      matchStartedByTeam: [],
       matchFinishedByTeam: [],
       currentGameScorersLoaded: false,
       csvGenerated: false,
@@ -73,7 +74,6 @@ export default {
       this.errors = []
       const currentGameScorersFormData = new FormData()
       const gameWeekNo = parseInt(this.game.week_no)
-      // const gameWeekNo = parseInt(this.game.week_no)
       currentGameScorersFormData.append('game_week_no', gameWeekNo)
 
       const options = {
@@ -88,6 +88,9 @@ export default {
           if (response.data.status === 'success' && response.data.game_week_data) {
             this.currentGameWeekData = Array.from(response.data.game_week_data)
             this.currentGameWeekData.forEach(match => {
+              console.log({ match })
+              this.matchStartedByTeam.push({ team: match.team_h, started: match.started })
+              this.matchStartedByTeam.push({ team: match.team_a, started: match.started })
               this.matchFinishedByTeam.push({ team: match.team_h, finished: match.finished_provisional })
               this.matchFinishedByTeam.push({ team: match.team_a, finished: match.finished_provisional })
 
@@ -185,13 +188,22 @@ export default {
           tempScorers.splice(playerInScorers, 1)
           scorersTotal++
         } else {
-          const matchTeam = this.matchFinishedByTeam.find(({ team }) => team === playerDetails.team_id)
-          console.log({ matchTeam })
+          const matchTeamFinished = this.matchFinishedByTeam.find(({ team }) => team === playerDetails.team_id)
+          console.log({ matchTeamFinished })
+          const matchTeamStarted = this.matchStartedByTeam.find(({ team }) => team === playerDetails.team_id)
+          console.log({ matchTeamStarted })
 
-          if (matchTeam && matchTeam.finished) {
+          if (matchTeamFinished && matchTeamFinished.finished) {
             playerHtml = `
               <div
                 class="player-picks__player w-full text-center p-2 bg-red-300">
+                ${this.playerDetails(playerId)}
+              </div>
+            `
+          } else if (matchTeamStarted && matchTeamStarted.started) {
+            playerHtml = `
+              <div
+                class="player-picks__player w-full text-center p-2 bg-yellow-300">
                 ${this.playerDetails(playerId)}
               </div>
             `
@@ -267,33 +279,6 @@ export default {
       this.$refs.csvDownloadButton.setAttribute('download', '5Scorers-picks-week-' + this.game.week_no + '.csv')
       this.csvGenerated = true
       this.$refs.csvDownloadButton.click()
-
-      // const createPicksCsvFormData = new FormData()
-      // createPicksCsvFormData.append('game_week_no', this.game.week_no)
-      // createPicksCsvFormData.append('picks', JSON.stringify(picksArray))
-
-      // const options = {
-      //   method: 'POST',
-      //   headers: { 'content-type': 'application/form-data' },
-      //   data: createPicksCsvFormData,
-      //   url: process.env.VUE_APP_BASE_URL + '/api/create-picks-csv.php'
-      // }
-
-      // this.axios(options)
-      //   .then(response => {
-      //     if (response.data.status === 'success' && response.data.result === 'CSV Created' && response.data.file_url !== '') {
-      //       this.csvGenerated = true
-      //       this.csvLocation = response.data.file_url
-      //       this.$refs.csvDownloadButton.setAttribute('href', this.csvLocation)
-      //       console.log(this.csvLocation)
-      //     } else {
-      //       this.errors.push(response.data.error)
-      //     }
-      //   })
-      //   .catch(error => {
-      //     const errorOutput = { id: this.errors.length + 1, message: error }
-      //     this.errors.push(errorOutput)
-      //   })
     }
   },
 
