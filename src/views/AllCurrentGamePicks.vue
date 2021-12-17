@@ -188,21 +188,21 @@ export default {
           const matchTeam = this.matchFinishedByTeam.find(({ team }) => team === playerDetails.team_id)
           console.log({ matchTeam })
 
-          // if (matchTeam.finished) {
-          //   playerHtml = `
-          //     <div
-          //       class="player-picks__player w-full text-center p-2 bg-red-300">
-          //       ${this.playerDetails(playerId)}
-          //     </div>
-          //   `
-          // } else {
-          playerHtml = `
-            <div
-              class="player-picks__player w-full text-center p-2">
-              ${this.playerDetails(playerId)}
-            </div>
-          `
-          // }
+          if (matchTeam && matchTeam.finished) {
+            playerHtml = `
+              <div
+                class="player-picks__player w-full text-center p-2 bg-red-300">
+                ${this.playerDetails(playerId)}
+              </div>
+            `
+          } else {
+            playerHtml = `
+              <div
+                class="player-picks__player w-full text-center p-2">
+                ${this.playerDetails(playerId)}
+              </div>
+            `
+          }
         }
 
         playersHtml = playersHtml + playerHtml
