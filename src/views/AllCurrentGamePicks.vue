@@ -22,7 +22,7 @@
       <div
         v-for="currentGamePick in currentGamePicks"
         :key="currentGamePick.picks_user_id"
-        :class="[{'flex-half': user.role === 'user' }, {'flex-third': user.role === 'admin' }, {'flex-third': gameDeadlinePassed }]"
+        :class="[{'flex-half': currentGamePicks.length <= 2 }]"
         class="current-picks__container container flex flex-row items-start justify-center flex-wrap mb-8 p-4 shadow-lg rounded-lg bg-white"
       >
         <div class="current-picks__user-name w-full text-center antialiased font-light mb-2">
@@ -73,7 +73,7 @@ export default {
     getCurrentGameScorers () {
       this.errors = []
       const currentGameScorersFormData = new FormData()
-      const gameWeekNo = parseInt(this.game.week_no) + 2
+      const gameWeekNo = parseInt(this.game.week_no)
       currentGameScorersFormData.append('game_week_no', gameWeekNo)
 
       const options = {
