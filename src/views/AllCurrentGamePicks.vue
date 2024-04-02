@@ -59,7 +59,7 @@
         class="current-picks__container container flex flex-row items-start justify-center flex-wrap mb-8 p-4 shadow-lg rounded-lg bg-white"
       >
         <div
-          class="current-picks__user-name w-full text-center antialiased font-light mb-2"
+          class="current-picks__user-name w-full text-center md:text-lg md:font-medium antialiased mb-2"
         >
           {{ currentGamePick.user_firstname }}
           {{ currentGamePick.user_lastname }}
@@ -211,6 +211,7 @@ export default {
             response.data.players_picks.length
           ) {
             this.currentGamePicks = response.data.players_picks
+            console.log('currentGamePicks', this.currentGamePicks)
           } else {
             this.errors.push(response.data.error)
           }
@@ -298,11 +299,16 @@ export default {
           ({ value }) => value === playerId
         )
 
+        const playerPhotoId = playerDetails.photo.replace('.jpg', '')
+        // const playerPhoto = 'https://resources.premierleague.com/premierleague/photos/players/110x140/p178301.png'
+        const playerPhoto = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${playerPhotoId}.png`
+
         if (playerInScorers > -1) {
           playerHtml = `
             <div
-              class="player-picks__player w-full text-center p-2 bg-green-300">
-              ${this.playerDetails(playerId)}
+              class="player-picks__player w-full flex items-center sm:font-light md:font-normal p-2 bg-green-300">
+              <img class="player-picks__player__photo" src="${playerPhoto}">
+              <div class="player-picks__player__name">${this.playerDetails(playerId)}</div>
             </div>
           `
           tempScorers.splice(playerInScorers, 1)
@@ -320,22 +326,25 @@ export default {
           if (matchTeamFinished && matchTeamFinished.finished) {
             playerHtml = `
               <div
-                class="player-picks__player w-full text-center p-2 bg-red-300">
-                ${this.playerDetails(playerId)}
+                class="player-picks__player w-full flex items-center sm:font-light md:font-normal p-2 bg-red-300">
+                <img class="player-picks__player__photo" src="${playerPhoto}">
+                <div class="player-picks__player__name">${this.playerDetails(playerId)}</div>
               </div>
             `
           } else if (matchTeamStarted && matchTeamStarted.started) {
             playerHtml = `
               <div
                 class="player-picks__player w-full text-center p-2 bg-yellow-300">
-                ${this.playerDetails(playerId)}
+                <img class="player-picks__player__photo" src="${playerPhoto}">
+                <div class="player-picks__player__name">${this.playerDetails(playerId)}</div>
               </div>
             `
           } else {
             playerHtml = `
               <div
                 class="player-picks__player w-full text-center p-2">
-                ${this.playerDetails(playerId)}
+                <img class="player-picks__player__photo" src="${playerPhoto}">
+                <div class="player-picks__player__name">${this.playerDetails(playerId)}</div>
               </div>
             `
           }
@@ -502,12 +511,26 @@ export default {
   }
 
   &__player {
-    border-left: solid 1px #cccccc;
-    border-right: solid 1px #cccccc;
-    border-bottom: solid 1px #cccccc;
+    border-left: solid 1px #222;
+    border-right: solid 1px #222;
+    border-bottom: solid 1px #222;
 
     &:first-of-type {
-      border-top: solid 1px #cccccc;
+      border-top: solid 1px #222;
+    }
+
+    &__photo {
+      display: inline;
+      margin-right: 2rem;
+      height: 100px;
+      padding: 0.25rem 0.25rem 0 0.25rem;
+      background-color: #eee;
+    }
+
+    @media screen and (max-width: 768px) {
+      &__photo {
+        display: none;
+      }
     }
   }
 }

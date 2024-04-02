@@ -38,6 +38,7 @@ if ($status_code === 200) {
         $player = array();
         $player['value'] = $item['id'];
         $web_name = $item['web_name'];
+        $player['photo'] = $item['photo'];
         $team = $item['team'];
         $team_name = $teams[$team - 1]['name'];
         $player['text'] = $web_name . ' - ' . $team_name;
