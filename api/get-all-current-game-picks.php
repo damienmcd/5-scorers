@@ -14,14 +14,14 @@ if (isset($_POST['game_id']) and isset($_POST['user_role']) and isset($_POST['us
 
     if ($user_role == 'admin' or $deadline_passed == 'true') {
         // $response['query_type'] = 'admin or deadline passed';
-        $query = "SELECT tbl_player_picks.picks_id AS picks_id, tbl_player_picks.picks_user_id AS picks_user_id, tbl_users.user_firstname AS user_firstname, tbl_users.user_lastname AS user_lastname, tbl_player_picks.picks_player_1 AS picks_player_1, tbl_player_picks.picks_player_2 AS picks_player_2, tbl_player_picks.picks_player_3 AS picks_player_3, tbl_player_picks.picks_player_4 AS picks_player_4, tbl_player_picks.picks_player_5 AS picks_player_5
+        $query = "SELECT tbl_player_picks.picks_id AS picks_id, tbl_player_picks.picks_user_id AS picks_user_id, tbl_users.user_firstname AS user_firstname, tbl_users.user_lastname AS user_lastname, tbl_player_picks.picks_player_1 AS picks_player_1, tbl_player_picks.picks_player_2 AS picks_player_2, tbl_player_picks.picks_player_3 AS picks_player_3, tbl_player_picks.picks_player_4 AS picks_player_4, tbl_player_picks.picks_player_5 AS picks_player_5, tbl_player_picks.correct_picks AS correct_picks
         FROM tbl_player_picks
         LEFT JOIN tbl_users
         ON tbl_player_picks.picks_user_id = tbl_users.user_id
         WHERE tbl_player_picks.picks_game_id = '$game_id'";
     } else {
         // $response['query_type'] = 'NOT admin and deadline NOT passed';
-        $query = "SELECT tbl_player_picks.picks_id AS picks_id, tbl_player_picks.picks_user_id AS picks_user_id, tbl_users.user_firstname AS user_firstname, tbl_users.user_lastname AS user_lastname, tbl_player_picks.picks_player_1 AS picks_player_1, tbl_player_picks.picks_player_2 AS picks_player_2, tbl_player_picks.picks_player_3 AS picks_player_3, tbl_player_picks.picks_player_4 AS picks_player_4, tbl_player_picks.picks_player_5 AS picks_player_5
+        $query = "SELECT tbl_player_picks.picks_id AS picks_id, tbl_player_picks.picks_user_id AS picks_user_id, tbl_users.user_firstname AS user_firstname, tbl_users.user_lastname AS user_lastname, tbl_player_picks.picks_player_1 AS picks_player_1, tbl_player_picks.picks_player_2 AS picks_player_2, tbl_player_picks.picks_player_3 AS picks_player_3, tbl_player_picks.picks_player_4 AS picks_player_4, tbl_player_picks.picks_player_5 AS picks_player_5, tbl_player_picks.correct_picks AS correct_picks
         FROM tbl_player_picks
         LEFT JOIN tbl_users
         ON tbl_player_picks.picks_user_id = tbl_users.user_id
@@ -49,6 +49,7 @@ if (isset($_POST['game_id']) and isset($_POST['user_role']) and isset($_POST['us
             $player_picks['player_3'] = $result->picks_player_3;
             $player_picks['player_4'] = $result->picks_player_4;
             $player_picks['player_5'] = $result->picks_player_5;
+            $player_picks['correct_picks'] = $result->correct_picks;
 
             array_push($players_picks, $player_picks);
         }

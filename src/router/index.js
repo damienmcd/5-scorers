@@ -8,43 +8,67 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue')
+    component: () => import(/* webpackChunkName: 'Home' */ '../views/Home.vue')
   },
   {
     path: '/admin',
     name: 'admin',
-    component: () => import(/* webpackChunkName: "Admin" */ '../views/Admin.vue'),
+    component: () =>
+      import(/* webpackChunkName: 'Admin' */ '../views/Admin.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => import(/* webpackChunkName: "Dashboard" */ '../views/Dashboard.vue'),
+    component: () =>
+      import(/* webpackChunkName: 'Dashboard' */ '../views/Dashboard.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/pick-scorers',
     name: 'pick-scorers',
-    component: () => import(/* webpackChunkName: "PickScorers" */ '../views/PickScorers.vue'),
+    component: () =>
+      import(/* webpackChunkName: 'PickScorers' */ '../views/PickScorers.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/current-game',
     name: 'current-game',
-    component: () => import(/* webpackChunkName: "AllCurrentGamePicks" */ '../views/AllCurrentGamePicks.vue'),
+    component: () =>
+      import(
+        /* webpackChunkName: 'AllCurrentGamePicks' */ '../views/AllCurrentGamePicks.vue'
+      ),
     meta: { requiresAuth: true }
   },
   {
     path: '/change-password',
     name: 'change-password',
-    component: () => import(/* webpackChunkName: "ChangePassword" */ '../views/ChangePassword.vue'),
+    component: () =>
+      import(
+        /* webpackChunkName: 'ChangePassword' */ '../views/ChangePassword.vue'
+      ),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/manage-users',
+    name: 'manage-users',
+    component: () =>
+      import(/* webpackChunkName: 'ManageUsers' */ '../views/ManageUsers.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/add-user',
+    name: 'add-user',
+    component: () =>
+      import(/* webpackChunkName: 'AddUser' */ '../views/AddUser.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/404',
     alias: '*',
     name: 'notFound',
-    component: () => import(/* webpachChunkName: "NotFound" */ '../views/404.vue')
+    component: () =>
+      import(/* webpachChunkName: 'NotFound' */ '../views/404.vue')
   }
 ]
 
@@ -54,7 +78,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!$store.getters.user.loggedIn) {
       next({
         name: 'home'

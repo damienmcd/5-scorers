@@ -10,7 +10,7 @@ if ($_SERVER['SERVER_NAME'] === '5scorers') {
     $username = "root";
     $password = "root";
     $hostname = "localhost";
-    $dbname = "5scorers";
+    $dbname = "db1633306_5scorers";
 } else {
     $username = "u1633306_avfc";
     $password = "QfGq5AjH1";

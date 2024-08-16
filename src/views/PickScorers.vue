@@ -1,14 +1,14 @@
 <template>
-  <div class="home container flex flex-row items-start justify-center flex-wrap min-h-fill-d px-6 pt-12">
-    <div class="max-w-screen-sm flex items-center justify-center flex-wrap">
-      <h1 class="font-sans text-lg antialiased font-light mb-6">Pick your 5 Scorers</h1>
+  <div class="pick-scorers home container flex flex-row items-start justify-center flex-wrap min-h-fill-d px-6 pt-12">
+    <div class="pick-scorers__wrapper max-w-screen-sm flex items-center justify-center flex-wrap">
+      <h1 class="pick-scorers__title font-sans text-lg antialiased mb-6">Pick your <span class="font-semibold">5 Scorers</span>!</h1>
 
       <div class="form-wrapper container flex flex-row items-start justify-center flex-wrap mb-8 p-6 shadow-lg rounded-lg bg-white">
         <div
           class="form-signin container flex flex-row items-start justify-center flex-wrap"
         >
-          <p class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center">Not sure if your picks are playing?</p>
-          <p class="font-sans antialiased font-light flex-grow-1 flex-shrink-0 w-full text-center">Check all <a class="font-normal text-green-700" href="https://www.premierinjuries.com/injury-table.php" target="_blank">injuries and suspensions</a>.</p>
+          <p class="font-sans antialiased flex-grow-1 flex-shrink-0 w-full text-center">Not sure if your picks are playing?</p>
+          <p class="font-sans antialiased flex-grow-1 flex-shrink-0 w-full text-center">Check all <a class="font-semibold text-green-700" href="https://www.premierinjuries.com/injury-table.php" target="_blank">injuries and suspensions</a>.</p>
           <form
             class="form-signin container flex flex-row items-start justify-center flex-wrap"
             action="#"
@@ -164,4 +164,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.pick-scorers {
+  &__title {
+    color: #37003c;
+  }
+}
 </style>

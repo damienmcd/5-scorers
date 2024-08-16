@@ -2,12 +2,11 @@
   <div
     class="current-picks max-w-screen-xl container flex flex-row items-start justify-center flex-wrap min-h-fill-d px-6 pt-12"
   >
-    <Loader v-show="!dataLoaded" />
     <div
       class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap relative"
     >
       <h1
-        class="current-picks__title font-sans text-lg text-center antialiased font-light mb-6"
+        class="current-picks__title font-sans text-lg text-center antialiased mb-6"
       >
         Current Game Picks
       </h1>
@@ -53,13 +52,30 @@
       </div>
 
       <div
+        v-if="!currentGamePicks.length"
+        class="current-picks__container container flex flex-row items-start justify-center flex-wrap mb-8 p-4 shadow-lg rounded-lg bg-white"
+      >
+        <div
+          class="current-picks__user-name w-full text-center md:text-lg md:font-medium antialiased p-2"
+        >
+          No picks found
+        </div>
+        <div v-if="currentGameScorersLoaded" class="player-picks w-full">
+            <div
+              class="player-picks__player w-full flex items-center justify-center sm:font-light md:font-normal p-2 bg-green-300">
+              <div>Please <router-link v-if="$store.getters.user.loggedIn" to="/pick-scorers" class="text-green-500 font-semibold">Pick Scorers</router-link> for the current game</div>
+            </div>
+        </div>
+      </div>
+
+      <div
         v-for="currentGamePick in currentGamePicks"
         :key="currentGamePick.picks_user_id"
         :class="[{ 'flex-half': currentGamePicks.length <= 2 }]"
         class="current-picks__container container flex flex-row items-start justify-center flex-wrap mb-8 p-4 shadow-lg rounded-lg bg-white"
       >
         <div
-          class="current-picks__user-name w-full text-center md:text-lg md:font-medium antialiased mb-2"
+          class="current-picks__user-name w-full text-center md:text-lg md:font-medium antialiased p-2"
         >
           {{ currentGamePick.user_firstname }}
           {{ currentGamePick.user_lastname }}
@@ -75,14 +91,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import moment from 'moment'
-import Loader from '../components/Loader'
 
 export default {
   name: 'PickScorers',
-
-  components: {
-    Loader
-  },
 
   props: {},
   data () {
@@ -104,6 +115,7 @@ export default {
 
   async beforeMount () {
     await this.getCurrentGameScorers()
+    this.dataLoaded = true
     await this.getCurrentGamePicks()
     // await this.getMissingGamePicks()
   },
@@ -113,6 +125,7 @@ export default {
       this.errors = []
       const currentGameScorersFormData = new FormData()
       const gameWeekNo = parseInt(this.game.week_no)
+      console.log({ gameWeekNo })
       currentGameScorersFormData.append('game_week_no', gameWeekNo)
 
       const options = {
@@ -317,11 +330,11 @@ export default {
           const matchTeamFinished = this.matchFinishedByTeam.find(
             ({ team }) => team === playerDetails.team_id
           )
-          console.log({ matchTeamFinished })
+          // console.log({ matchTeamFinished })
           const matchTeamStarted = this.matchStartedByTeam.find(
             ({ team }) => team === playerDetails.team_id
           )
-          console.log({ matchTeamStarted })
+          // console.log({ matchTeamStarted })
 
           if (matchTeamFinished && matchTeamFinished.finished) {
             playerHtml = `
@@ -334,7 +347,7 @@ export default {
           } else if (matchTeamStarted && matchTeamStarted.started) {
             playerHtml = `
               <div
-                class="player-picks__player w-full text-center p-2 bg-yellow-300">
+                class="player-picks__player w-full flex items-center sm:font-light md:font-normal p-2 bg-yellow-300">
                 <img class="player-picks__player__photo" src="${playerPhoto}">
                 <div class="player-picks__player__name">${this.playerDetails(playerId)}</div>
               </div>
@@ -342,7 +355,7 @@ export default {
           } else {
             playerHtml = `
               <div
-                class="player-picks__player w-full text-center p-2">
+                class="player-picks__player w-full flex items-center sm:font-light md:font-normal p-2">
                 <img class="player-picks__player__photo" src="${playerPhoto}">
                 <div class="player-picks__player__name">${this.playerDetails(playerId)}</div>
               </div>
@@ -357,7 +370,7 @@ export default {
         playersHtml =
           playersHtml +
           `
-        <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2">
+        <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2 rounded-lg">
           <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
           <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
           <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
@@ -368,7 +381,7 @@ export default {
         playersHtml =
           playersHtml +
           `
-        <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2">
+        <div class="player-picks__players__scorers-total flex flex-row items-center justify-center mt-4 p-2 rounded-lg">
           <img class="player-picks__players__scorers-ball mr-2" src="/icons/ball-2.svg">
           x <span class="ml-2 player-picks__players__scorers-number">${scorersTotal}</span>
         </div>`
@@ -393,9 +406,49 @@ export default {
       return playerPicksHtml
     },
 
-    createPicksCsv () {
+    async updateCorrectPicks () {
+      this.currentGamePicks.forEach((userPicks) => {
+        const correctPicks = this.playersScoredExport(userPicks)
+        userPicks.correct_picks = correctPicks
+
+        // // Update the database
+        // const correctPicksFormData = new FormData()
+        // correctPicksFormData.append('picks_id', userPicks.picks_id)
+        // correctPicksFormData.append('picks_user_id', userPicks.picks_user_id)
+        // correctPicksFormData.append('correct_picks', correctPicks)
+
+        // const options = {
+        //   method: 'POST',
+        //   headers: { 'content-type': 'application/form-data' },
+        //   data: correctPicksFormData,
+        //   url: process.env.VUE_APP_BASE_URL + '/api/update-correct-picks.php'
+        // }
+
+        // this.axios(options)
+        //   .then(response => {
+        //     if (response.data) {
+        //       console.log(response.data)
+        //     }
+        //     if (response.data.status === 'success' && response.data.message.length) {
+        //       console.log(response.data.message)
+        //     } else {
+        //       this.errors.push(response.data.error)
+        //     }
+        //   })
+        //   .catch(error => {
+        //     const errorOutput = { id: this.errors.length + 1, message: error }
+        //     this.errors.push(errorOutput)
+        //   })
+      })
+    },
+
+    async createPicksCsv () {
       console.log('Creating CSV of picks for week ' + this.game.week_no)
       const picksArray = []
+
+      await this.updateCorrectPicks()
+      // await this.getCurrentGamePicks()
+
       this.currentGamePicks.forEach((userPicks) => {
         const userPicksArray = []
         userPicksArray.push(
@@ -406,13 +459,14 @@ export default {
         userPicksArray.push(this.playerDetails(userPicks.player_3))
         userPicksArray.push(this.playerDetails(userPicks.player_4))
         userPicksArray.push(this.playerDetails(userPicks.player_5))
+        userPicksArray.push(userPicks.correct_picks)
 
         picksArray.push(userPicksArray)
       })
 
       this.errors = []
 
-      let csv = 'User,Scorer 1,Scorer 2,Scorer 3,Scorer 4,Scorer 5\n'
+      let csv = 'User,Scorer 1,Scorer 2,Scorer 3,Scorer 4,Scorer 5,Correct Picks\n'
       picksArray.forEach((row) => {
         csv += row.join(',')
         csv += '\n'
@@ -427,6 +481,30 @@ export default {
       )
       this.csvGenerated = true
       this.$refs.csvDownloadButton.click()
+    },
+
+    playersScoredExport (playerPicks) {
+      const tempScorers = [...this.currentGameScorers]
+      const picksScorersOnly = [
+        parseInt(playerPicks.player_1),
+        parseInt(playerPicks.player_2),
+        parseInt(playerPicks.player_3),
+        parseInt(playerPicks.player_4),
+        parseInt(playerPicks.player_5)
+      ]
+      let scorersTotal = 0
+
+      for (let index = 0; index < picksScorersOnly.length; index++) {
+        const playerId = picksScorersOnly[index]
+        const playerInScorers = tempScorers.indexOf(playerId)
+
+        if (playerInScorers > -1) {
+          tempScorers.splice(playerInScorers, 1)
+          scorersTotal++
+        }
+      }
+
+      return scorersTotal
     }
   },
 
@@ -458,10 +536,20 @@ export default {
 .current-picks {
   &__title {
     flex: 1 0 100%;
+    color: #37003c;
   }
 
   &__container {
     flex: 0 0 49%;
+    background-color: #fefefe;
+  }
+
+  &__user-name {
+    color: white;
+    font-weight: 600;
+    background-color: #37003c;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
   }
 }
 
@@ -511,12 +599,13 @@ export default {
   }
 
   &__player {
-    border-left: solid 1px #222;
-    border-right: solid 1px #222;
-    border-bottom: solid 1px #222;
+    background: white;
+    border-left: .1rem solid #ebe5eb;
+    border-right: .1rem solid #ebe5eb;
+    border-bottom: .1rem solid #ebe5eb;
 
     &:first-of-type {
-      border-top: solid 1px #222;
+      border-top: .1rem solid #ebe5eb;
     }
 
     &__photo {
@@ -525,6 +614,12 @@ export default {
       height: 100px;
       padding: 0.25rem 0.25rem 0 0.25rem;
       background-color: #eee;
+      // border-top-left-radius: 0.5rem;
+      // border-top-right-radius: 0.5rem;
+      border-radius: 0.5rem;
+      border-left: .1rem solid #ebe5eb;
+      border-right: .1rem solid #ebe5eb;
+      border-top: .1rem solid #ebe5eb;
     }
 
     @media screen and (max-width: 768px) {
