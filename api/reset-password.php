@@ -29,9 +29,6 @@ if (isset($_POST['user_id']) and isset($_POST['user_email'])) {
         $response['error'] = 'Error updating password';
     }
 
-    $results = mysqli_query($conn, $query) or die(mysqli_error($conn));
-    $count = mysqli_num_rows($results);
-
     echo json_encode($response);
 } else {
     $response['status'] = 'error';

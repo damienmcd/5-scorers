@@ -5,21 +5,16 @@
     <div
       class="max-w-screen-xl flex flex-row items-center justify-center flex-wrap relative mb-8"
     >
-      <h1
-        class="users__title font-sans text-lg text-center antialiased mb-6"
-      >
+      <h1 class="users__title font-sans text-lg text-center antialiased mb-6">
         5 Scorers Users
       </h1>
-      <div
-        v-if="user.role === 'admin'"
-        class="users__title mb-8 text-center"
-      >
+      <div v-if="user.role === 'admin'" class="users__title mb-8 text-center">
         <router-link
-            v-if="user.role == 'admin'"
-            to="/add-user"
-            class="btn--add-user text-sm px-4 py-2 leading-none border rounded bg-green-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mb-4 md:mb-0 relative"
-          >
-            Add User
+          v-if="user.role == 'admin'"
+          to="/add-user"
+          class="btn--add-user text-sm px-4 py-2 leading-none border rounded bg-green-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mb-4 md:mb-0 relative"
+        >
+          Add User
         </router-link>
       </div>
 
@@ -42,13 +37,33 @@
         <div
           class="users__user-name text-center md:text-lg md:font-medium antialiased p-2"
         >
-          {{ user.user_firstname }} {{ user.user_lastname }}<span v-if="user.user_role === 'admin'"> (admin)</span>
+          {{ user.user_firstname }} {{ user.user_lastname
+          }}<span v-if="user.user_role === 'admin'"> (admin)</span>
         </div>
         <div
           class="users__buttons flex flex-row flex-wrap justify-center text-center md:text-lg md:font-medium antialiased p-2"
         >
-          <button @click="resetPassword(user.user_id, user.user_firstname, user.user_lastname, user.user_email)" class="btn--add-user text-sm px-4 py-2 leading-none border rounded bg-green-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mr-2 relative">Reset Password</button>
-          <button @click="deleteUser(user.user_id, user.user_firstname, user.user_lastname)" class="btn--add-user text-sm px-4 py-2 leading-none border rounded bg-red-500 text-white border-white hover:border-transparent hover:text-red-500 hover:bg-white relative">Delete User</button>
+          <button
+            @click="
+              resetPassword(
+                user.user_id,
+                user.user_firstname,
+                user.user_lastname,
+                user.user_email
+              )
+            "
+            class="btn--add-user text-sm px-4 py-2 leading-none border rounded bg-green-500 text-white border-white hover:border-transparent hover:text-green-500 hover:bg-white mr-2 relative"
+          >
+            Reset Password
+          </button>
+          <button
+            @click="
+              deleteUser(user.user_id, user.user_firstname, user.user_lastname)
+            "
+            class="btn--add-user text-sm px-4 py-2 leading-none border rounded bg-red-500 text-white border-white hover:border-transparent hover:text-red-500 hover:bg-white relative"
+          >
+            Delete User
+          </button>
         </div>
       </div>
     </div>
@@ -63,36 +78,31 @@ export default {
   name: 'PickScorers',
 
   props: {},
-  data () {
+  data() {
     return {
       users: [],
       updateUserResponse: 'User updated',
       errors: [],
-      dataLoaded: false
+      dataLoaded: false,
     }
   },
 
-  async beforeMount () {
+  async beforeMount() {
     await this.getUsers()
   },
 
   methods: {
-    getUsers () {
+    getUsers() {
       this.errors = []
       const options = {
         method: 'POST',
         headers: { 'content-type': 'application/form-data' },
-        url:
-          process.env.VUE_APP_BASE_URL +
-          '/api/get-users.php'
+        url: process.env.VUE_APP_BASE_URL + '/api/get-users.php',
       }
 
       this.axios(options)
         .then((response) => {
-          if (
-            response.data.status === 'success' &&
-            response.data.users
-          ) {
+          if (response.data.status === 'success' && response.data.users) {
             this.users = Array.from(response.data.users)
           } else {
             this.errors.push(response.data.error)
@@ -107,14 +117,14 @@ export default {
         })
     },
 
-    async resetPassword (userId, userFirstname, userLastname, userEmail) {
+    async resetPassword(userId, userFirstname, userLastname, userEmail) {
       const { value } = await Swal.fire({
         title: 'Reset Password',
         text: `Are you sure you want to reset the password for ${userFirstname} ${userLastname} to the default password?`,
         icon: 'warning',
         confirmButtonText: 'Yes',
         confirmButtonColor: '#EF4444',
-        showCancelButton: true
+        showCancelButton: true,
       })
       if (value) {
         const resetPasswordFormData = new FormData()
@@ -126,22 +136,18 @@ export default {
           method: 'POST',
           headers: { 'content-type': 'application/form-data' },
           data: resetPasswordFormData,
-          url:
-            process.env.VUE_APP_BASE_URL +
-            '/api/reset-password.php'
+          url: process.env.VUE_APP_BASE_URL + '/api/reset-password.php',
         }
 
         this.axios(options)
           .then((response) => {
-            if (
-              response.data.status === 'success'
-            ) {
+            if (response.data.status === 'success') {
               this.getUsers()
               Swal.fire({
                 title: 'Password Updated',
                 text: `${userFirstname} ${userLastname}'s password has been reset to the default password'.`,
                 icon: 'success',
-                confirmButtonColor: '#14B8A6'
+                confirmButtonColor: '#14B8A6',
               })
             } else {
               this.errors.push(response.data.error)
@@ -159,14 +165,14 @@ export default {
       }
     },
 
-    async deleteUser (userId, userFirstname, userLastname) {
+    async deleteUser(userId, userFirstname, userLastname) {
       const { value } = await Swal.fire({
         title: 'Delete User',
         text: `Are you sure you want to delete ${userFirstname} ${userLastname}?`,
         icon: 'warning',
         confirmButtonText: 'Yes',
         confirmButtonColor: '#EF4444',
-        showCancelButton: true
+        showCancelButton: true,
       })
       if (value) {
         const deleteUserFormData = new FormData()
@@ -177,22 +183,18 @@ export default {
           method: 'POST',
           headers: { 'content-type': 'application/form-data' },
           data: deleteUserFormData,
-          url:
-            process.env.VUE_APP_BASE_URL +
-            '/api/delete-user.php'
+          url: process.env.VUE_APP_BASE_URL + '/api/delete-user.php',
         }
 
         this.axios(options)
           .then((response) => {
-            if (
-              response.data.status === 'success'
-            ) {
+            if (response.data.status === 'success') {
               this.getUsers()
               Swal.fire({
                 title: 'User Deleted',
                 text: `${userFirstname} ${userLastname} has been deleted.`,
                 icon: 'success',
-                confirmButtonColor: '#14B8A6'
+                confirmButtonColor: '#14B8A6',
               })
             } else {
               this.errors.push(response.data.error)
@@ -208,13 +210,13 @@ export default {
       } else {
         console.log({ value })
       }
-    }
+    },
   },
 
   computed: {
     ...mapGetters(['game']),
-    ...mapGetters(['user'])
-  }
+    ...mapGetters(['user']),
+  },
 }
 </script>
 
@@ -241,7 +243,7 @@ export default {
       background-color: #efefef;
     }
 
-    &:hover{
+    &:hover {
       background-color: #dedede;
     }
   }

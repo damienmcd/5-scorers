@@ -13,15 +13,38 @@ if (isset($_POST['firstname']) and isset($_POST['lastname']) and isset($_POST['e
     $lastname = $_POST['lastname'];
     $email = $_POST['email'];
     $admin = $_POST['admin'];
+    $user_id = null;
 
-    $query = "SELECT user_firstname, user_lastname, user_email FROM `tbl_users` WHERE user_firstname='$firstname' and user_lastname='$lastname' and user_email='$email'";
+    $query = "SELECT user_id, user_firstname, user_lastname, user_email, user_role, user_deleted FROM `tbl_users` WHERE user_firstname='$firstname' and user_lastname='$lastname' and user_email='$email' ORDER BY user_id DESC LIMIT 1";
 
     $results = mysqli_query($conn, $query) or die(mysqli_error($conn));
     $count = mysqli_num_rows($results);
 
-    if ($count > 0) {
+    if ($count === 0) {
         $response['status'] = 'error';
         $response['error'] = 'User already registered';
+    } elseif ($count === 1) {
+        // Edit existing user
+        while ($result = mysqli_fetch_object($results)) {
+            $user_id = $result->user_id;
+        }
+
+        // Set password (uses the first part of the user's email address, before the @ symbol)
+        $email_substrings = explode("@", $email);
+        $email_substring_password = $email_substrings[0];
+        $password = md5($email_substring_password);
+
+        $update_query = "UPDATE `tbl_users` SET user_firstname='$firstname', user_lastname='$lastname', user_password='$password', user_role='$admin', user_deleted=0 WHERE user_id='$user_id'";
+
+        $update_results = mysqli_query($conn, $update_query) or die(mysqli_error($conn));
+
+        if ($update_results) {
+            $response['status'] = 'success';
+            $response['message'] = 'User re-added';
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Error re-adding user';
+        }
     } else {
         // Set password (uses the first part of the user's email address, before the @ symbol)
         $email_substrings = explode("@", $email);
@@ -36,7 +59,6 @@ if (isset($_POST['firstname']) and isset($_POST['lastname']) and isset($_POST['e
         if ($insert_results) {
             $response['status'] = 'success';
             $response['message'] = 'User added';
-            $response['password'] = $email_substring_password;
         } else {
             $response['status'] = 'error';
             $response['message'] = 'Error adding user';

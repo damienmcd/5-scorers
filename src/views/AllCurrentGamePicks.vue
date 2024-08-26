@@ -410,35 +410,36 @@ export default {
       this.currentGamePicks.forEach((userPicks) => {
         const correctPicks = this.playersScoredExport(userPicks)
         userPicks.correct_picks = correctPicks
+        console.log({ userPicks })
 
-        // // Update the database
-        // const correctPicksFormData = new FormData()
-        // correctPicksFormData.append('picks_id', userPicks.picks_id)
-        // correctPicksFormData.append('picks_user_id', userPicks.picks_user_id)
-        // correctPicksFormData.append('correct_picks', correctPicks)
+        // Update the database
+        const correctPicksFormData = new FormData()
+        correctPicksFormData.append('picks_id', userPicks.picks_id)
+        correctPicksFormData.append('picks_user_id', userPicks.picks_user_id)
+        correctPicksFormData.append('correct_picks', correctPicks)
 
-        // const options = {
-        //   method: 'POST',
-        //   headers: { 'content-type': 'application/form-data' },
-        //   data: correctPicksFormData,
-        //   url: process.env.VUE_APP_BASE_URL + '/api/update-correct-picks.php'
-        // }
+        const options = {
+          method: 'POST',
+          headers: { 'content-type': 'application/form-data' },
+          data: correctPicksFormData,
+          url: process.env.VUE_APP_BASE_URL + '/api/update-correct-picks.php'
+        }
 
-        // this.axios(options)
-        //   .then(response => {
-        //     if (response.data) {
-        //       console.log(response.data)
-        //     }
-        //     if (response.data.status === 'success' && response.data.message.length) {
-        //       console.log(response.data.message)
-        //     } else {
-        //       this.errors.push(response.data.error)
-        //     }
-        //   })
-        //   .catch(error => {
-        //     const errorOutput = { id: this.errors.length + 1, message: error }
-        //     this.errors.push(errorOutput)
-        //   })
+        this.axios(options)
+          .then(response => {
+            if (response.data) {
+              console.log(response.data)
+            }
+            if (response.data.status === 'success' && response.data.message.length) {
+              console.log(response.data.message)
+            } else {
+              this.errors.push(response.data.error)
+            }
+          })
+          .catch(error => {
+            const errorOutput = { id: this.errors.length + 1, message: error }
+            this.errors.push(errorOutput)
+          })
       })
     },
 
@@ -463,6 +464,7 @@ export default {
 
         picksArray.push(userPicksArray)
       })
+      console.log({ picksArray })
 
       this.errors = []
 
@@ -599,7 +601,7 @@ export default {
   }
 
   &__player {
-    background: white;
+    // background: white;
     border-left: .1rem solid #ebe5eb;
     border-right: .1rem solid #ebe5eb;
     border-bottom: .1rem solid #ebe5eb;
